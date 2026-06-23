@@ -1074,7 +1074,7 @@ function Footer() {
             <img src={logo} alt="" className="w-full h-full object-cover" />
           </span>
           <span className="text-display text-forest text-[clamp(2rem,8vw,5rem)] leading-none">
-            Restoran Garden
+            Restoran Garden | Developed by David
           </span>
         </div>
 
