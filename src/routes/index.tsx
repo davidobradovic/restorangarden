@@ -16,7 +16,6 @@ import {
   MapPin,
   Menu,
   Phone,
-  PlayCircle,
   Quote,
   Star,
   Tent,
@@ -25,29 +24,42 @@ import {
   Wine,
   X,
   ZoomIn,
+  Leaf,
+  Trophy,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import heroGirl from "@/assets/andjelagaco.jpg";
-import chef from "@/assets/chef.jpg";
-import fries from "@/assets/fries.jpg";
-import chicken from "@/assets/chicken.jpg";
-import menu1 from "@/assets/menu-1.jpg";
-import menu2 from "@/assets/menu-2.jpg";
-import menu3 from "@/assets/menu-3.jpg";
-import feast1 from "@/assets/feast-1.jpg";
+import aboutImg1 from "@/assets/galerija-nova/specijalitet4.JPG";
+import aboutImg2 from "@/assets/galerija/slika11.jpg";
+import aboutImg3 from "@/assets/galerija-nova/biftek.JPG";
+import imgDorucak from "@/assets/galerija-nova/dorucak.JPG";
+import imgMeze from "@/assets/galerija-nova/meze.JPG";
+import imgUstipci from "@/assets/galerija-nova/ustipci.JPG";
+import imgPizza from "@/assets/galerija-nova/slatka-pita.JPG";
+import imgSupa from "@/assets/galerija-nova/slano.JPG";
+import imgPasta from "@/assets/galerija-nova/pasta.JPG";
+import imgSalata from "@/assets/galerija-nova/biftek2.JPG";
+import imgPiletina from "@/assets/galerija-nova/specijalitet.JPG";
+import imgTeletina from "@/assets/galerija-nova/biftek3.JPG";
+import imgRostilj from "@/assets/galerija-nova/specijaliteti.JPG";
+import imgRiba from "@/assets/galerija-nova/riba.JPG";
+import imgPoslastice from "@/assets/galerija-nova/kolaci.JPG";
 import heroWP from "@/assets/web-garden2_1920px2.jpg";
-import feast2 from "@/assets/feast-2.jpg";
-import feast3 from "@/assets/feast-3.jpg";
-import statsPerson from "@/assets/stats-person.jpg";
+import statsImage from "@/assets/galerija/MG_3661_prcsd_srgb.jpg";
 import contactImg from "@/assets/kontaktslika.webp";
-import testi1 from "@/assets/testi-1.jpg";
-import testi2 from "@/assets/testi-2.jpg";
-import logo from "@/assets/logo.jpg";
+import testi1 from "@/assets/galerija/MG_3729_prcsd_srgb.jpg";
+import testi2 from "@/assets/galerija-nova/kafe.JPG";
+import logo from "@/assets/logo-garden.png";
+import videoLjeto from "@/assets/videi/ljetougardenu.MP4";
+import videoPorodicni from "@/assets/videi/porodicnivikend.MP4";
+import videoSpecijaliteti from "@/assets/videi/specijaliteti.MP4";
+import videoVinska from "@/assets/videi/vinskaradionica.MP4";
 import paprika from "@/assets/sliced-paprika.png";
 import veg1 from "@/assets/001-1.png";
 import veg2 from "@/assets/004-1.png";
 import veg3 from "@/assets/005.png";
+import certifikat from "@/assets/galerija-nova/certifikat.JPG";
 import { LanguageProvider, useLanguage } from "@/lib/i18n/LanguageProvider";
 import {
   localeLabels,
@@ -64,25 +76,42 @@ const INSTAGRAM = "https://www.instagram.com/restaurantgarden2018/";
 const FACEBOOK = "https://www.facebook.com/restaurantgarden2018";
 
 const categoryImages: Record<MenuCategoryKey, string> = {
-  breakfast: menu1,
-  coldStarters: menu2,
-  hotStarters: menu3,
-  buckwheatPizza: feast1,
-  soups: feast2,
-  pasta: feast3,
-  salads: chef,
-  poultry: chicken,
-  vealPork: fries,
-  grill: menu1,
-  fish: menu2,
-  desserts: menu3,
+  breakfast: imgDorucak,
+  coldStarters: imgMeze,
+  hotStarters: imgUstipci,
+  buckwheatPizza: imgPizza,
+  soups: imgSupa,
+  pasta: imgPasta,
+  salads: imgSalata,
+  poultry: imgPiletina,
+  vealPork: imgTeletina,
+  grill: imgRostilj,
+  fish: imgRiba,
+  desserts: imgPoslastice,
 };
 
-const newGalleryModules = import.meta.glob<{ default: string }>('@/assets/galerija-nova/*.{JPG,jpg,jpeg,png}', { eager: true });
-const galleryImages = Object.values(newGalleryModules).map(mod => ({
+const galleryModules = import.meta.glob<{ default: string }>(
+  "@/assets/galerija/*.{jpg,JPG,jpeg,png}",
+  { eager: true },
+);
+const galleryImages = Object.values(galleryModules).map((mod) => ({
   src: mod.default,
-  alt: "Restoran Garden — galerija"
+  alt: "Restoran Garden — galerija",
 }));
+
+const siteVideos = [
+  { src: videoLjeto, key: "summer" as const },
+  { src: videoPorodicni, key: "family" as const },
+  { src: videoSpecijaliteti, key: "specialties" as const },
+  { src: videoVinska, key: "wine" as const },
+];
+
+const tabVideoMap = {
+  playground: videoPorodicni,
+  wineWorkshop: videoVinska,
+  fireplaceRoom: videoLjeto,
+  events: videoSpecijaliteti,
+} as const;
 
 const wineWorkshopModules = import.meta.glob<{ default: string }>('@/assets/vinska-radionica/*.{JPG,jpg,jpeg,png}', { eager: true });
 const wineWorkshopImages = Object.values(wineWorkshopModules).map(m => m.default);
@@ -127,6 +156,28 @@ const fadeUp = {
   transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
 };
 
+function VideoPlayer({ src, poster, label }: { src: string; poster?: string; label?: string }) {
+  return (
+    <div className="relative aspect-auto rounded-2xl overflow-hidden shadow-xl bg-forest/10 border border-forest/10">
+      <video
+        src={src}
+        poster={poster}
+        controls
+        playsInline
+        preload="metadata"
+        className="w-full h-full object-cover"
+      >
+        <track kind="captions" />
+      </video>
+      {label && (
+        <p className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-forest/80 to-transparent px-4 py-3 text-cream text-sm font-medium">
+          {label}
+        </p>
+      )}
+    </div>
+  );
+}
+
 function LanguageSwitcher() {
   const { locale, setLocale } = useLanguage();
   const locales = Object.keys(localeLabels) as Locale[];
@@ -165,10 +216,10 @@ function Nav() {
     <header className="fixed top-0 inset-x-0 z-50 px-4 pt-4">
       <nav className="mx-auto max-w-6xl flex items-center justify-between gap-3 rounded-full bg-forest/85 backdrop-blur-md px-5 py-3 text-cream border border-white/10 shadow-lg shadow-forest-deep/20">
         <a href="#home" className="flex items-center gap-2 font-display text-xl shrink-0">
-          <span className="grid place-items-center size-8 rounded-full bg-sunshine text-ink">
-            <img src={logo} alt="" className="w-full h-full rounded-full" />
+          <span className="grid place-items-center rounded-full text-ink">
+            <img src={logo} alt="" className="w-full h-10" />
           </span>
-          Restoran Garden
+          {/* Restoran Garden */}
         </a>
         <ul className="hidden lg:flex items-center gap-6 text-sm font-medium">
           {links.map((l) => (
@@ -222,41 +273,95 @@ function Nav() {
   );
 }
 
+
 function Hero() {
   const { t } = useLanguage();
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const yImg = useTransform(scrollYProgress, [0, 1], [0, 100]);
   const yText = useTransform(scrollYProgress, [0, 1], [0, -50]);
-
+ 
   return (
     <section
       ref={ref}
       id="home"
-      className="relative bg-forest text-cream overflow-hidden bg-cover bg-center pb-60"
+      className="relative bg-forest text-cream overflow-hidden"
     >
-      <img src={heroWP} alt="" className="absolute inset-0 w-full h-full object-cover object-center" />
-      <div className="w-full h-full absolute z-5 bg-linear-to-t from-cream  to-transparent" />
-
-      <div className="relative z-10">
+      {/* Background sa subtilnim overlayom - vidljiv sadržaj */}
+      <div className="absolute inset-0">
+        <img 
+          src={heroWP} 
+          alt="" 
+          className="w-full h-full object-cover object-center" 
+        />
+        {/* Subtilan overlay - više transparent da se background vidi */}
+        <div className="absolute inset-0 bg-gradient-to-r from-forest/70 via-forest/50 to-transparent" />
+      </div>
+ 
+      {/* Dekorativne animirane oblike */}
+      <div className="absolute inset-0 z-5">
         <motion.div
           animate={{ y: [0, -20, 0], rotate: [0, 8, 0] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute left-[8%] top-[30%] size-16 rounded-full bg-orange-zest hidden md:block"
+          className="absolute left-[8%] top-[15%] size-16 rounded-full bg-orange-zest hidden md:block"
         />
         <motion.div
           animate={{ y: [0, 18, 0] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute right-[12%] top-[20%] size-24 rounded-full bg-sunshine/40 blur-sm hidden md:block"
+          className="absolute right-[10%] top-[10%] size-24 rounded-full bg-sunshine/30 blur-sm hidden lg:block"
         />
-
-        <div className="max-w-7xl mx-auto px-4 grid lg:grid-cols-2 items-end gap-8 h-full relative">
-          <motion.div style={{ y: yText }} className="relative z-10">
+      </div>
+ 
+      {/* Dekorativne slike povrća */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        {/* Paprika - gore desno */}
+        <motion.img
+          src={paprika}
+          alt=""
+          animate={{ y: [0, 12, 0], rotate: [0, 5, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute right-[5%] top-[20%] w-20 h-20 md:w-24 md:h-24 opacity-40 hidden lg:block"
+        />
+ 
+        {/* Veg1 - levo */}
+        <motion.img
+          src={veg1}
+          alt=""
+          animate={{ y: [0, -10, 0] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+          className="absolute left-[2%] top-[40%] w-16 h-16 md:w-20 md:h-20 opacity-30 hidden md:block"
+        />
+ 
+        {/* Veg2 - desno dole */}
+        <motion.img
+          src={veg2}
+          alt=""
+          animate={{ y: [0, 15, 0], x: [0, 5, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          className="absolute right-[3%] bottom-[25%] w-20 h-20 md:w-28 md:h-28 opacity-35 hidden lg:block"
+        />
+ 
+        {/* Veg3 - levo gore */}
+        <motion.img
+          src={veg3}
+          alt=""
+          animate={{ y: [0, -15, 0], rotate: [0, -8, 0] }}
+          transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+          className="absolute left-[5%] top-[10%] w-24 h-24 md:w-32 md:h-32 opacity-25 hidden lg:block"
+        />
+      </div>
+ 
+      {/* Glavna sekcija */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 pt-8 md:pt-16 pb-32 md:pb-40">
+        {/* Grid za tekst i sliku - stacked na mobile */}
+        <div className="grid lg:grid-cols-2 gap-4 md:gap-8 lg:gap-12 items-center min-h-auto lg:min-h-[700px]">
+          {/* Levo - Tekstualni sadržaj */}
+          <motion.div style={{ y: yText }} className="relative z-10 order-2 lg:order-1">
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              className="text-display text-forest mt-5 text-[clamp(1rem,6vw,4.5rem)]"
+              className="text-display text-cream mt-0 text-[clamp(1.5rem,5vw,4.5rem)] font-bold leading-tight"
             >
               {t.hero.titleLine1}{" "}
               <span className="italic text-sunshine">{t.hero.titleHighlight}</span>
@@ -267,7 +372,7 @@ function Hero() {
                     {t.hero.titleLine2}
                     <svg
                       viewBox="0 0 200 20"
-                      className="absolute -bottom-3 left-0 w-full h-3 text-orange-zest"
+                      className="absolute -bottom-2 md:-bottom-3 left-0 w-full h-2 md:h-3 text-orange-zest"
                       fill="none"
                     >
                       <path
@@ -281,37 +386,41 @@ function Hero() {
                 </>
               )}
             </motion.h1>
+ 
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="mt-6 max-w-md text-forest/80 text-lg"
+              className="mt-4 md:mt-6 max-w-md text-cream/90 text-base md:text-lg leading-relaxed"
             >
               {t.hero.subtitle}
             </motion.p>
+ 
+            {/* CTA dugmići */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="mt-8 flex flex-wrap gap-3"
+              className="mt-6 md:mt-8 flex flex-col sm:flex-row flex-wrap gap-3 md:gap-4"
             >
               <a
                 href="#contact"
-                className="group inline-flex items-center gap-2 rounded-full bg-sunshine text-ink px-6 py-3.5 font-semibold hover:bg-leaf transition-colors"
+                className="group inline-flex items-center justify-center md:justify-start gap-2 rounded-full bg-sunshine text-forest px-6 md:px-7 py-3 md:py-3.5 font-semibold hover:bg-orange-zest transition-all duration-300 hover:shadow-lg w-full sm:w-auto"
               >
                 {t.hero.ctaContact}
                 <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
               </a>
               <a
                 href="#menu"
-                className="inline-flex items-center gap-2 rounded-full border border-forest/20 text-forest px-6 py-3.5 font-medium hover:bg-forest/5 transition-colors"
+                className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-cream text-cream px-6 md:px-7 py-3 md:py-3.5 font-medium hover:bg-cream/10 transition-all duration-300 w-full sm:w-auto"
               >
                 {t.hero.ctaMenu}
               </a>
             </motion.div>
           </motion.div>
-
-          <motion.div style={{ y: yImg }} className="relative h-[500px] lg:h-[620px]">
+ 
+          {/* Desno - Slika */}
+          <motion.div style={{ y: yImg }} className="relative h-[300px] sm:h-[400px] md:h-[600px] lg:h-[620px] flex justify-center items-end order-1 lg:order-2">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -326,36 +435,127 @@ function Hero() {
                 className="h-full w-auto object-contain drop-shadow-2xl"
               />
             </motion.div>
-
+ 
+            {/* Rating floating badge */}
             <motion.div
               animate={{ y: [0, 14, 0] }}
               transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-              className="absolute bottom-4 -right-2 md:right-4 bg-cream text-ink rounded-2xl p-3 shadow-xl"
+              className="absolute bottom-4 sm:bottom-8 md:bottom-20 right-2 sm:right-4 md:right-8 bg-cream text-forest rounded-xl md:rounded-2xl p-3 md:p-4 shadow-xl z-20"
             >
               <div className="flex items-center gap-1 text-orange-zest">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} className="size-3.5 fill-current" />
+                  <Star key={i} className="size-3 md:size-4 fill-current" />
                 ))}
               </div>
-              <p className="text-xs mt-1 font-medium">{t.hero.rating}</p>
+              <p className="text-xs md:text-sm font-semibold mt-1">{t.hero.rating}</p>
             </motion.div>
-
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-              className="absolute bottom-24 -left-4 md:-left-8 bg-cream text-ink rounded-2xl p-3 shadow-xl max-w-[160px]"
-            >
-              <div className="flex items-center gap-2 text-sunshine">
-                <Award className="size-5 fill-current" />
-                <GraduationCap className="size-5" />
-              </div>
-              <p className="text-xs mt-1 font-semibold">{t.hero.awardsAndEducation}</p>
-            </motion.div>
-
           </motion.div>
         </div>
+ 
+        {/* Certifikat - Vidljiv na svim veličinama */}
+        <div className="mt-8 md:mt-12 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
+            className="flex justify-center md:absolute md:right-0 md:top-0"
+          >
+            <motion.img
+              src={certifikat}
+              alt="Garden Restaurant Recommended"
+              animate={{ y: [0, -8, 0], rotate: [0, 2, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+              className="w-40 h-52 sm:w-48 sm:h-64 md:w-40 md:h-52 lg:w-48 lg:h-64 drop-shadow-lg hover:drop-shadow-2xl transition-all duration-300"
+            />
+          </motion.div>
+        </div>
+ 
+        {/* Sekcija za Certifikate i Nagrade - Dno */}
+        <div className="mt-20 md:mt-32 pt-8 md:pt-12 border-t border-cream/20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+            className="text-center mb-8 md:mb-10"
+          >
+            <h3 className="text-lg md:text-2xl font-semibold text-cream mb-2">
+              Certificiranja i Nagrade
+            </h3>
+            <p className="text-sm md:text-base text-cream/70">
+              Profesionalno priznat i nagrađivan za kvalitet i inovaciju
+            </p>
+          </motion.div>
+ 
+          {/* Grid za certifikate - responsivno */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+            {/* Certifikat 1 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9 }}
+              className="bg-cream/10 backdrop-blur-sm rounded-lg md:rounded-xl p-4 md:p-6 text-center hover:bg-cream/15 transition-colors duration-300 border border-cream/20"
+            >
+              <div className="text-sunshine text-2xl md:text-3xl mb-2 md:mb-3 flex justify-center">
+                <Award className="size-6 md:size-8" />
+              </div>
+              <h4 className="text-xs md:text-sm font-semibold text-cream mb-1">
+                Najbolji Restoran
+              </h4>
+              <p className="text-xs text-cream/70">2023</p>
+            </motion.div>
+ 
+            {/* Certifikat 2 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.0 }}
+              className="bg-cream/10 backdrop-blur-sm rounded-lg md:rounded-xl p-4 md:p-6 text-center hover:bg-cream/15 transition-colors duration-300 border border-cream/20"
+            >
+              <div className="text-orange-zest text-2xl md:text-3xl mb-2 md:mb-3 flex justify-center">
+                <Trophy className="size-6 md:size-8" />
+              </div>
+              <h4 className="text-xs md:text-sm font-semibold text-cream mb-1">
+                Kulinarna Znamenitost
+              </h4>
+              <p className="text-xs text-cream/70">2022</p>
+            </motion.div>
+ 
+            {/* Certifikat 3 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.1 }}
+              className="bg-cream/10 backdrop-blur-sm rounded-lg md:rounded-xl p-4 md:p-6 text-center hover:bg-cream/15 transition-colors duration-300 border border-cream/20"
+            >
+              <div className="text-sunshine text-2xl md:text-3xl mb-2 md:mb-3 flex justify-center">
+                <GraduationCap className="size-6 md:size-8" />
+              </div>
+              <h4 className="text-xs md:text-sm font-semibold text-cream mb-1">
+                Certificiran Kuvar
+              </h4>
+              <p className="text-xs text-cream/70">Le Cordon Bleu</p>
+            </motion.div>
+ 
+            {/* Certifikat 4 */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1.2 }}
+              className="bg-cream/10 backdrop-blur-sm rounded-lg md:rounded-xl p-4 md:p-6 text-center hover:bg-cream/15 transition-colors duration-300 border border-cream/20"
+            >
+              <div className="text-leaf text-2xl md:text-3xl mb-2 md:mb-3 flex justify-center">
+                <Leaf className="size-6 md:size-8" />
+              </div>
+              <h4 className="text-xs md:text-sm font-semibold text-cream mb-1">
+                Ekoloska Sertifikacija
+              </h4>
+              <p className="text-xs text-cream/70">2024</p>
+            </motion.div>
+          </div>
+        </div>
       </div>
-
+ 
+      {/* SVG talasa na dnu */}
       <svg
         viewBox="0 0 1440 120"
         className="absolute bottom-0 left-0 w-full text-cream"
@@ -392,15 +592,15 @@ function BrandStory() {
         <div className="grid grid-cols-3 gap-3 md:gap-6 mt-14 items-end">
           <motion.img
             {...fadeUp}
-            src={fries}
+            src={aboutImg1}
             alt=""
             loading="lazy"
-            className="aspect-square w-full object-cover rounded-3xl shadow-lg"
+            className="aspect-[4/5] w-full object-cover rounded-3xl shadow-lg"
           />
           <motion.img
             {...fadeUp}
             transition={{ duration: 0.7, delay: 0.15 }}
-            src={chef}
+            src={aboutImg2}
             alt=""
             loading="lazy"
             className="aspect-[4/5] w-full object-cover rounded-3xl shadow-2xl -translate-y-6"
@@ -408,10 +608,10 @@ function BrandStory() {
           <motion.img
             {...fadeUp}
             transition={{ duration: 0.7, delay: 0.3 }}
-            src={chicken}
+            src={aboutImg3}
             alt=""
             loading="lazy"
-            className="aspect-square w-full object-cover rounded-3xl shadow-lg"
+            className="aspect-[4/5] w-full object-cover rounded-3xl shadow-lg"
           />
         </div>
       </div>
@@ -597,15 +797,11 @@ function FeaturesTabs() {
             <h3 className="text-display text-2xl md:text-3xl text-forest mt-6">{activeData.title}</h3>
             <p className="text-base md:text-lg text-forest/75 leading-relaxed">{activeData.desc}</p>
 
-            {/* Video placeholder for events */}
-            {activeTab === "events" && (
-              <div className="relative aspect-video bg-forest/8 rounded-2xl overflow-hidden flex items-center justify-center border-2 border-dashed border-forest/25 mt-4">
-                <div className="text-center space-y-2">
-                  <PlayCircle className="size-14 text-forest/35 mx-auto" />
-                  <p className="text-forest/50 font-medium text-sm">{f.events.videoLabel}</p>
-                </div>
-              </div>
-            )}
+            <VideoPlayer
+              src={tabVideoMap[activeTab]}
+              poster={heroImage}
+              label={t.videos.items[activeTab === "playground" ? "family" : activeTab === "wineWorkshop" ? "wine" : activeTab === "fireplaceRoom" ? "summer" : "specialties"]}
+            />
           </div>
 
           {/* Right: Image gallery grid */}
@@ -645,6 +841,43 @@ function FeaturesTabs() {
 }
 
 
+
+function VideosSection() {
+  const { t } = useLanguage();
+
+  return (
+    <section id="videos" className="bg-forest text-cream py-24 md:py-32">
+      <div className="max-w-6xl mx-auto px-4">
+        <motion.p {...fadeUp} className="text-script text-3xl text-sunshine text-center">
+          {t.videos.label}
+        </motion.p>
+        <motion.h2
+          {...fadeUp}
+          className="text-display text-center text-[clamp(2.25rem,5vw,4rem)] mt-2"
+        >
+          {t.videos.title}
+        </motion.h2>
+        <motion.p {...fadeUp} className="text-center text-cream/75 mt-4 max-w-2xl mx-auto">
+          {t.videos.subtitle}
+        </motion.p>
+
+        <div className="mt-12 grid sm:grid-cols-2 gap-6">
+          {siteVideos.map(({ src, key }, i) => (
+            <motion.div
+              key={key}
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.08 }}
+            >
+              <VideoPlayer src={src} label={t.videos.items[key]} />
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
 function GalleryLightbox({
   index,
@@ -805,8 +1038,8 @@ function Stats() {
 
         <div className="relative mt-16 h-[420px] md:h-[500px]">
           <img
-            src={statsPerson}
-            alt=""
+            src={statsImage}
+            alt="Restoran Garden"
             loading="lazy"
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 size-64 md:size-80 object-cover rounded-full shadow-2xl border-4 border-cream"
           />
@@ -857,6 +1090,23 @@ function Testimonials() {
         >
           {t.testimonials.title}
         </motion.h2>
+
+        <motion.div
+          {...fadeUp}
+          className="mt-6 inline-flex items-center gap-3 rounded-full bg-white border border-forest/10 px-5 py-2.5 shadow-sm"
+        >
+          <span className="grid place-items-center size-8 rounded-full bg-white shadow border border-forest/10 text-sm font-bold text-forest">
+            G
+          </span>
+          <div className="text-left">
+            <div className="flex items-center gap-1 text-orange-zest">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star key={i} className="size-4 fill-current" />
+              ))}
+            </div>
+            <p className="text-sm font-semibold text-forest">{t.testimonials.googleRating}</p>
+          </div>
+        </motion.div>
 
         <motion.div
           key={idx}
@@ -1070,11 +1320,11 @@ function Footer() {
         </div>
 
         <div className="mt-16 flex items-center justify-center gap-3">
-          <span className="grid place-items-center size-14 rounded-full bg-forest text-sunshine overflow-hidden">
-            <img src={logo} alt="" className="w-full h-full object-cover" />
+          <span className="grid place-items-center text-sunshine overflow-hidden">
+            <img src={logo} alt="" className="w-full h-10 object-cover" />
           </span>
-          <span className="text-display text-forest text-[clamp(2rem,8vw,5rem)] leading-none">
-            Restoran Garden | Developed by David
+          <span className="text-display text-forest text-[clamp(1rem,6vw,3rem)] leading-none">
+            Restoran Garden
           </span>
         </div>
 
@@ -1126,6 +1376,7 @@ function IndexContent() {
       <Banner />
       <MenuSection />
       <FeaturesTabs />
+      <VideosSection />
       <GallerySection />
       <Stats />
       <Testimonials />

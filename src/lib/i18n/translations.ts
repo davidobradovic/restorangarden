@@ -93,7 +93,19 @@ export type Translation = {
   testimonials: {
     label: string;
     title: string;
+    googleRating: string;
     items: { quote: string; name: string; role: string }[];
+  };
+  videos: {
+    label: string;
+    title: string;
+    subtitle: string;
+    items: {
+      summer: string;
+      family: string;
+      specialties: string;
+      wine: string;
+    };
   };
   features: {
     label: string;
@@ -244,6 +256,7 @@ export const translations: Record<Locale, Translation> = {
     testimonials: {
       label: "utisci gostiju",
       title: "Šta kažu naši gosti",
+      googleRating: "4.9 na Google-u",
       items: [
         {
           quote:
@@ -263,6 +276,17 @@ export const translations: Record<Locale, Translation> = {
           role: "Gost",
         },
       ],
+    },
+    videos: {
+      label: "video",
+      title: "Garden u pokretu",
+      subtitle: "Pogledajte atmosferu restorana, porodične vikende, specijalitete i vinske radionice.",
+      items: {
+        summer: "Ljeto u Garden-u",
+        family: "Porodični vikend",
+        specialties: "Naši specijaliteti",
+        wine: "Vinska radionica",
+      },
     },
     features: {
       label: "istražite",
@@ -309,7 +333,7 @@ export const translations: Record<Locale, Translation> = {
       title: "Tamo gdje su ukusi,\ntamo smo mi",
       hours: "Radno vrijeme",
       visit: "Adresa i kontakt",
-      copyright: "Restoran Garden, Rogoušići. Sva prava zadržana.",
+      copyright: "Restoran Garden, Rogoušići. Sva prava zadržana. | Developed by David",
     },
   },
 
@@ -425,6 +449,7 @@ export const translations: Record<Locale, Translation> = {
     testimonials: {
       label: "guest reviews",
       title: "What our guests say",
+      googleRating: "4.9 on Google",
       items: [
         {
           quote:
@@ -443,6 +468,17 @@ export const translations: Record<Locale, Translation> = {
           role: "Guest",
         },
       ],
+    },
+    videos: {
+      label: "video",
+      title: "Garden in motion",
+      subtitle: "Watch our restaurant atmosphere, family weekends, specialties and wine workshops.",
+      items: {
+        summer: "Summer at Garden",
+        family: "Family weekend",
+        specialties: "Our specialties",
+        wine: "Wine workshop",
+      },
     },
     features: {
       label: "explore",
@@ -489,7 +525,7 @@ export const translations: Record<Locale, Translation> = {
       title: "Where flavours are,\nthere we are",
       hours: "Opening hours",
       visit: "Address & contact",
-      copyright: "Restaurant Garden, Rogoušići. All rights reserved.",
+      copyright: "Restaurant Garden, Rogoušići. All rights reserved. | Developed by David",
     },
   },
 
@@ -605,6 +641,7 @@ export const translations: Record<Locale, Translation> = {
     testimonials: {
       label: "Gästebewertungen",
       title: "Was unsere Gäste sagen",
+      googleRating: "4.9 bei Google",
       items: [
         {
           quote:
@@ -623,6 +660,17 @@ export const translations: Record<Locale, Translation> = {
           role: "Gast",
         },
       ],
+    },
+    videos: {
+      label: "video",
+      title: "Garden in Bewegung",
+      subtitle: "Erleben Sie Atmosphäre, Familienwochenenden, Spezialitäten und Wein-Workshops.",
+      items: {
+        summer: "Sommer im Garden",
+        family: "Familienwochenende",
+        specialties: "Unsere Spezialitäten",
+        wine: "Wein-Workshop",
+      },
     },
     features: {
       label: "entdecken",
@@ -669,7 +717,7 @@ export const translations: Record<Locale, Translation> = {
       title: "Wo Geschmack ist,\nsind wir",
       hours: "Öffnungszeiten",
       visit: "Adresse & Kontakt",
-      copyright: "Restaurant Garden, Rogoušići. Alle Rechte vorbehalten.",
+      copyright: "Restaurant Garden, Rogoušići. Alle Rechte vorbehalten. | Developed by David",
     },
   },
 
@@ -785,6 +833,7 @@ export const translations: Record<Locale, Translation> = {
     testimonials: {
       label: "отзывы гостей",
       title: "Что говорят наши гости",
+      googleRating: "4.9 в Google",
       items: [
         {
           quote:
@@ -803,6 +852,17 @@ export const translations: Record<Locale, Translation> = {
           role: "Гость",
         },
       ],
+    },
+    videos: {
+      label: "видео",
+      title: "Garden в движении",
+      subtitle: "Атмосфера ресторана, семейные выходные, специалитеты и винные мастер-классы.",
+      items: {
+        summer: "Лето в Garden",
+        family: "Семейные выходные",
+        specialties: "Наши специалитеты",
+        wine: "Винная мастерская",
+      },
     },
     features: {
       label: "исследуйте",
@@ -849,7 +909,7 @@ export const translations: Record<Locale, Translation> = {
       title: "Там, где вкус,\nтам и мы",
       hours: "Часы работы",
       visit: "Адрес и контакты",
-      copyright: "Restaurant Garden, Rogoušići. Все права защищены.",
+      copyright: "Restaurant Garden, Rogoušići. Все права защищены. | Developed by David",
     },
   },
 
@@ -964,6 +1024,7 @@ export const translations: Record<Locale, Translation> = {
     testimonials: {
       label: "客人评价",
       title: "客人怎么说",
+      googleRating: "Google 4.9 分",
       items: [
         {
           quote: "漂亮的新餐厅。舒适的内饰、音乐、氛围、夏季露台和花园……优秀的美食供应和有趣的酒单。",
@@ -981,6 +1042,17 @@ export const translations: Record<Locale, Translation> = {
           role: "客人",
         },
       ],
+    },
+    videos: {
+      label: "视频",
+      title: "Garden 动态",
+      subtitle: "观看餐厅氛围、家庭周末、特色美食和葡萄酒工坊。",
+      items: {
+        summer: "Garden 之夏",
+        family: "家庭周末",
+        specialties: "我们的特色菜",
+        wine: "葡萄酒工坊",
+      },
     },
     features: {
       label: "探索",
@@ -1027,7 +1099,7 @@ export const translations: Record<Locale, Translation> = {
       title: "有美味的地方，\n就有我们",
       hours: "营业时间",
       visit: "地址与联系",
-      copyright: "Restaurant Garden, Rogoušići. 保留所有权利。",
+      copyright: "Restaurant Garden, Rogoušići. 保留所有权利。| Developed by David",
     },
   },
 };
