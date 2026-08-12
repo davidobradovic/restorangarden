@@ -31,7 +31,7 @@ import { useEffect, useRef, useState } from "react";
 
 import heroGirl from "@/assets/andjelagaco.jpg";
 import aboutImg1 from "@/assets/galerija-nova/specijalitet4.JPG";
-import aboutImg2 from "@/assets/galerija/slika11.jpg";
+import aboutImg2 from "@/assets/galerija/1.jpg";
 import aboutImg3 from "@/assets/galerija-nova/biftek.JPG";
 import imgDorucak from "@/assets/galerija-nova/dorucak.JPG";
 import imgMeze from "@/assets/galerija-nova/meze.JPG";
@@ -169,11 +169,6 @@ function VideoPlayer({ src, poster, label }: { src: string; poster?: string; lab
       >
         <track kind="captions" />
       </video>
-      {label && (
-        <p className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-forest/80 to-transparent px-4 py-3 text-cream text-sm font-medium">
-          {label}
-        </p>
-      )}
     </div>
   );
 }
@@ -200,10 +195,10 @@ function LanguageSwitcher() {
     </div>
   );
 }
-
 function Nav() {
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
+
   const links = [
     { label: t.nav.home, id: "home" },
     { label: t.nav.menu, id: "menu" },
@@ -212,358 +207,617 @@ function Nav() {
     { label: t.nav.contact, id: "contact" },
   ];
 
+  const closeMenu = () => {
+    setOpen(false);
+  };
+
   return (
-    <header className="fixed top-0 inset-x-0 z-50 px-4 pt-4">
-      <nav className="mx-auto max-w-6xl flex items-center justify-between gap-3 rounded-full bg-forest/85 backdrop-blur-md px-5 py-3 text-cream border border-white/10 shadow-lg shadow-forest-deep/20">
-        <a href="#home" className="flex items-center gap-2 font-display text-xl shrink-0">
-          <span className="grid place-items-center rounded-full text-ink">
-            <img src={logo} alt="" className="w-full h-10" />
-          </span>
-          {/* Restoran Garden */}
+    <header
+      className="
+        sticky top-0 z-50
+        w-full
+        border-b border-black/10
+        bg-white
+        shadow-sm
+        lg:border-white/10
+        lg:bg-forest
+      "
+    >
+      <nav
+        className="
+          mx-auto flex min-h-[72px]
+          w-full max-w-7xl
+          items-center justify-between
+          gap-4 px-4
+          sm:px-6 lg:px-8
+        "
+      >
+        {/* Logo */}
+        <a
+          href="#home"
+          onClick={closeMenu}
+          aria-label="Restoran Garden"
+          className="flex shrink-0 items-center"
+        >
+          <img
+            src={logo}
+            alt="Restoran Garden"
+            className="h-11 w-auto object-contain sm:h-12"
+          />
         </a>
-        <ul className="hidden lg:flex items-center gap-6 text-sm font-medium">
-          {links.map((l) => (
-            <li key={l.id}>
-              <a href={`#${l.id}`} className="hover:text-sunshine transition-colors">
-                {l.label}
+
+        {/* Desktop navigacija */}
+        <ul className="hidden items-center gap-7 lg:flex">
+          {links.map((link) => (
+            <li key={link.id}>
+              <a
+                href={`#${link.id}`}
+                className="
+                  text-sm font-medium text-cream
+                  transition-colors duration-200
+                  hover:text-sunshine
+                "
+              >
+                {link.label}
               </a>
             </li>
           ))}
         </ul>
-        <div className="hidden md:flex items-center gap-3">
+
+        {/* Desktop opcije */}
+        <div className="hidden items-center gap-3 lg:flex">
           <LanguageSwitcher />
+
           <a
             href="#contact"
-            className="inline-flex items-center gap-1.5 rounded-full bg-sunshine text-ink px-4 py-2 text-sm font-semibold hover:bg-leaf transition-colors whitespace-nowrap"
+            className="
+              inline-flex items-center justify-center
+              whitespace-nowrap rounded-full
+              bg-sunshine px-5 py-2.5
+              text-sm font-semibold text-ink
+              transition-colors
+              hover:bg-leaf
+            "
           >
             {t.nav.cta}
           </a>
         </div>
+
+        {/* Mobile dugme */}
         <button
-          onClick={() => setOpen(!open)}
-          className="md:hidden p-2"
-          aria-label="Menu"
+          type="button"
+          onClick={() => setOpen((current) => !current)}
+          aria-label={open ? "Zatvori meni" : "Otvori meni"}
+          aria-expanded={open}
+          className="
+            grid size-11 place-items-center
+            rounded-full text-forest
+            transition-colors
+            hover:bg-forest/10
+            lg:hidden
+          "
         >
-          <Menu className="size-5" />
+          <Menu className="size-6" />
         </button>
       </nav>
-      {open && (
-        <div className="md:hidden mx-auto max-w-6xl mt-2 rounded-2xl bg-forest text-cream p-4 flex flex-col gap-3">
-          {links.map((l) => (
+
+      {/* Mobile meni */}
+      <div
+        className={`
+          overflow-hidden bg-white
+          transition-[max-height,opacity]
+          duration-300 ease-in-out
+          lg:hidden
+
+          ${
+            open
+              ? "max-h-[520px] border-t border-black/10 opacity-100"
+              : "max-h-0 border-t border-transparent opacity-0"
+          }
+        `}
+      >
+        <div
+          className="
+            mx-auto flex max-w-7xl
+            flex-col px-4 py-4
+            sm:px-6
+          "
+        >
+          {links.map((link) => (
             <a
-              key={l.id}
-              href={`#${l.id}`}
-              onClick={() => setOpen(false)}
-              className="py-2"
+              key={link.id}
+              href={`#${link.id}`}
+              onClick={closeMenu}
+              className="
+                border-b border-black/5
+                px-1 py-3
+                font-medium text-forest
+                transition-colors
+                hover:text-leaf
+              "
             >
-              {l.label}
+              {link.label}
             </a>
           ))}
-          <LanguageSwitcher />
-          <a
-            href="#contact"
-            onClick={() => setOpen(false)}
-            className="rounded-full bg-sunshine text-ink px-4 py-2 text-center font-semibold"
-          >
-            {t.nav.cta}
-          </a>
+
+          <div className="mt-4 flex items-center gap-3">
+            <LanguageSwitcher />
+
+            <a
+              href="#contact"
+              onClick={closeMenu}
+              className="
+                inline-flex flex-1
+                items-center justify-center
+                rounded-full bg-sunshine
+                px-4 py-3
+                font-semibold text-ink
+                transition-colors
+                hover:bg-leaf
+              "
+            >
+              {t.nav.cta}
+            </a>
+          </div>
         </div>
-      )}
+      </div>
     </header>
   );
 }
 
+type ProduceItem = {
+  src: string;
+  left: string;
+  top: string;
+  width: string;
+  rotation: number;
+  delay: number;
+  duration: number;
+  hideOnMobile?: boolean;
+};
 
-function Hero() {
+const heroProduce: ProduceItem[] = [
+  {
+    src: paprika,
+    left: "16%",
+    top: "5%",
+    width: "clamp(42px, 5.5vw, 115px)",
+    rotation: -8,
+    delay: 0.15,
+    duration: 4.8,
+  },
+  {
+    src: veg1,
+    left: "39%",
+    top: "3%",
+    width: "clamp(42px, 5vw, 110px)",
+    rotation: -6,
+    delay: 0.48,
+    duration: 5.4,
+    hideOnMobile: true,
+  },
+  {
+    src: veg2,
+    left: "80%",
+    top: "6%",
+    width: "clamp(46px, 6vw, 125px)",
+    rotation: 12,
+    delay: 0.3,
+    duration: 5,
+  },
+  {
+    src: veg3,
+    left: "7%",
+    top: "27%",
+    width: "clamp(40px, 4.5vw, 95px)",
+    rotation: -6,
+    delay: 0.43,
+    duration: 5.2,
+    hideOnMobile: true,
+  },
+  {
+    src: paprika,
+    left: "87%",
+    top: "30%",
+    width: "clamp(52px, 7vw, 145px)",
+    rotation: 16,
+    delay: 0.25,
+    duration: 4.6,
+  },
+  {
+    src: veg1,
+    left: "85%",
+    top: "62%",
+    width: "clamp(48px, 6.5vw, 135px)",
+    rotation: 8,
+    delay: 0.4,
+    duration: 5.5,
+    hideOnMobile: true,
+  },
+  {
+    src: veg2,
+    left: "9%",
+    top: "72%",
+    width: "clamp(52px, 7vw, 145px)",
+    rotation: -12,
+    delay: 0.54,
+    duration: 5.1,
+  },
+  {
+    src: veg3,
+    left: "28%",
+    top: "85%",
+    width: "clamp(40px, 5vw, 105px)",
+    rotation: 6,
+    delay: 0.6,
+    duration: 4.9,
+    hideOnMobile: true,
+  },
+  {
+    src: paprika,
+    left: "62%",
+    top: "86%",
+    width: "clamp(40px, 5vw, 105px)",
+    rotation: -12,
+    delay: 0.35,
+    duration: 5.3,
+  },
+];
+
+const awards = [
+  {
+    icon: Award,
+    title: "Najbolji restoran",
+    subtitle: "2023",
+    iconClassName: "text-sunshine",
+  },
+  {
+    icon: Trophy,
+    title: "Kulinarna znamenitost",
+    subtitle: "2022",
+    iconClassName: "text-orange-zest",
+  },
+  {
+    icon: GraduationCap,
+    title: "Certificiran kuvar",
+    subtitle: "Le Cordon Bleu",
+    iconClassName: "text-sunshine",
+  },
+  {
+    icon: Leaf,
+    title: "Ekološka sertifikacija",
+    subtitle: "2024",
+    iconClassName: "text-leaf",
+  },
+];
+
+const reveal: Variants = {
+  hidden: { opacity: 0, y: 28 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] },
+  },
+};
+
+export default function Hero() {
   const { t } = useLanguage();
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const yImg = useTransform(scrollYProgress, [0, 1], [0, 100]);
-  const yText = useTransform(scrollYProgress, [0, 1], [0, -50]);
- 
+  const storyRef = useRef<HTMLElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: storyRef,
+    offset: ["start end", "end start"],
+  });
+
+  const yText = useTransform(scrollYProgress, [0, 1], [45, -35]);
+  const yImage = useTransform(scrollYProgress, [0, 1], [70, -25]);
+
   return (
-    <section
-      ref={ref}
-      id="home"
-      className="relative bg-forest text-cream overflow-hidden"
-    >
-      {/* Background sa subtilnim overlayom - vidljiv sadržaj */}
-      <div className="absolute inset-0">
-        <img 
-          src={heroWP} 
-          alt="" 
-          className="w-full h-full object-cover object-center" 
-        />
-        {/* Subtilan overlay - više transparent da se background vidi */}
-        <div className="absolute inset-0 bg-gradient-to-r from-forest/70 via-forest/50 to-transparent" />
-      </div>
- 
-      {/* Dekorativne animirane oblike */}
-      <div className="absolute inset-0 z-5">
-        <motion.div
-          animate={{ y: [0, -20, 0], rotate: [0, 8, 0] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute left-[8%] top-[15%] size-16 rounded-full bg-orange-zest hidden md:block"
-        />
-        <motion.div
-          animate={{ y: [0, 18, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute right-[10%] top-[10%] size-24 rounded-full bg-sunshine/30 blur-sm hidden lg:block"
-        />
-      </div>
- 
-      {/* Dekorativne slike povrća */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* Paprika - gore desno */}
+    <>
+      {/* HERO: ista struktura kao poslani HTML */}
+      <section id="home" className="relative w-full overflow-hidden bg-cream">
+  <div
+    className="
+      relative mx-auto w-full max-w-[2200px] overflow-hidden
+      h-auto aspect-video
+    "
+  >
+    <img
+      src={heroWP}
+      alt="Restoran Garden - tamo gdje su ukusi, tamo smo mi"
+      width={2200}
+      height={1007}
+      loading="eager"
+      fetchPriority="high"
+      draggable={false}
+      className="
+        absolute inset-0
+        aspect-video w-full
+        object-cover
+        object-[50%_48%]
+      "
+    />
+
+    {heroProduce.map((item, index) => (
+      <motion.div
+        key={`${item.src}-${index}`}
+        aria-hidden="true"
+        initial={{
+          opacity: 0,
+          y: -18,
+          scale: 0.88,
+          rotate: item.rotation,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          rotate: item.rotation,
+        }}
+        transition={{
+          duration: 0.7,
+          delay: item.delay,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+        className={`pointer-events-none absolute z-10 select-none ${
+          item.hideOnMobile ? "hidden sm:block" : "block"
+        }`}
+        style={{
+          left: item.left,
+          top: item.top,
+          width: item.width,
+        }}
+      >
         <motion.img
-          src={paprika}
+          src={item.src}
           alt=""
-          animate={{ y: [0, 12, 0], rotate: [0, 5, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute right-[5%] top-[20%] w-20 h-20 md:w-24 md:h-24 opacity-40 hidden lg:block"
+          loading="lazy"
+          draggable={false}
+          animate={{
+            y: [0, -8, 0],
+            rotate: [0, 2, 0],
+          }}
+          transition={{
+            duration: item.duration,
+            delay: item.delay,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="h-auto w-full drop-shadow-[0_10px_16px_rgba(20,36,26,0.22)]"
         />
- 
-        {/* Veg1 - levo */}
-        <motion.img
-          src={veg1}
-          alt=""
-          animate={{ y: [0, -10, 0] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-          className="absolute left-[2%] top-[40%] w-16 h-16 md:w-20 md:h-20 opacity-30 hidden md:block"
-        />
- 
-        {/* Veg2 - desno dole */}
-        <motion.img
-          src={veg2}
-          alt=""
-          animate={{ y: [0, 15, 0], x: [0, 5, 0] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-          className="absolute right-[3%] bottom-[25%] w-20 h-20 md:w-28 md:h-28 opacity-35 hidden lg:block"
-        />
- 
-        {/* Veg3 - levo gore */}
-        <motion.img
-          src={veg3}
-          alt=""
-          animate={{ y: [0, -15, 0], rotate: [0, -8, 0] }}
-          transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-          className="absolute left-[5%] top-[10%] w-24 h-24 md:w-32 md:h-32 opacity-25 hidden lg:block"
-        />
-      </div>
- 
-      {/* Glavna sekcija */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 pt-8 md:pt-16 pb-32 md:pb-40">
-        {/* Grid za tekst i sliku - stacked na mobile */}
-        <div className="grid lg:grid-cols-2 gap-4 md:gap-8 lg:gap-12 items-center min-h-auto lg:min-h-[700px]">
-          {/* Levo - Tekstualni sadržaj */}
-          <motion.div style={{ y: yText }} className="relative z-10 order-2 lg:order-1">
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              className="text-display text-cream mt-0 text-[clamp(1.5rem,5vw,4.5rem)] font-bold leading-tight"
-            >
-              {t.hero.titleLine1}{" "}
-              <span className="italic text-sunshine">{t.hero.titleHighlight}</span>
-              {t.hero.titleLine2 && (
-                <>
-                  <br />
-                  <span className="relative inline-block">
-                    {t.hero.titleLine2}
-                    <svg
-                      viewBox="0 0 200 20"
-                      className="absolute -bottom-2 md:-bottom-3 left-0 w-full h-2 md:h-3 text-orange-zest"
-                      fill="none"
-                    >
-                      <path
-                        d="M2 14 Q 50 2 100 10 T 198 8"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                        strokeLinecap="round"
-                      />
-                    </svg>
-                  </span>
-                </>
-              )}
-            </motion.h1>
- 
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="mt-4 md:mt-6 max-w-md text-cream/90 text-base md:text-lg leading-relaxed"
-            >
-              {t.hero.subtitle}
-            </motion.p>
- 
-            {/* CTA dugmići */}
+      </motion.div>
+    ))}
+  </div>
+</section>
+
+      {/* NOVA SEKCIJA: tekst, žena, rating, certifikat i nagrade */}
+      <section
+        ref={storyRef}
+        id="garden-intro"
+        className="relative overflow-hidden bg-cream text-forest"
+      >
+        {/* Pozadinski dekorativni elementi */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+          <div className="absolute -left-40 top-24 size-[420px] rounded-full bg-forest/[0.05] blur-2xl" />
+          <div className="absolute -right-32 bottom-40 size-[380px] rounded-full bg-sunshine/15 blur-3xl" />
+
+          <motion.img
+            src={veg3}
+            alt=""
+            animate={{ y: [0, -14, 0], rotate: [-10, -4, -10] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute left-[3%] top-[12%] hidden w-24 opacity-[0.15] lg:block xl:w-32"
+          />
+
+          <motion.img
+            src={paprika}
+            alt=""
+            animate={{ y: [0, 12, 0], rotate: [12, 18, 12] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute right-[3%] top-[18%] hidden w-20 opacity-[0.15] lg:block xl:w-28"
+          />
+        </div>
+
+        <div className="relative z-10 mx-auto max-w-7xl px-4 py-20 sm:px-6 md:py-28 lg:px-8 lg:py-32">
+          <div className="grid items-center gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
+            {/* Tekst */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="mt-6 md:mt-8 flex flex-col sm:flex-row flex-wrap gap-3 md:gap-4"
+              style={{ y: yText }}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.3 }}
+              variants={reveal}
+              className="relative z-20 order-2 lg:order-1"
             >
-              <a
-                href="#contact"
-                className="group inline-flex items-center justify-center md:justify-start gap-2 rounded-full bg-sunshine text-forest px-6 md:px-7 py-3 md:py-3.5 font-semibold hover:bg-orange-zest transition-all duration-300 hover:shadow-lg w-full sm:w-auto"
+              <motion.div
+                initial={{ opacity: 0, x: -18 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.65 }}
+                className="mb-5 inline-flex items-center gap-3 rounded-full border border-forest/10 bg-white/[0.65] px-4 py-2 shadow-sm backdrop-blur"
               >
-                {t.hero.ctaContact}
-                <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
-              </a>
-              <a
-                href="#menu"
-                className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-cream text-cream px-6 md:px-7 py-3 md:py-3.5 font-medium hover:bg-cream/10 transition-all duration-300 w-full sm:w-auto"
-              >
-                {t.hero.ctaMenu}
-              </a>
+                <span className="size-2 rounded-full bg-orange-zest" />
+                <span className="text-xs font-bold uppercase tracking-[0.2em] text-forest/70 sm:text-sm">
+                  Restoran Garden
+                </span>
+              </motion.div>
+
+              <h1 className="text-display text-[clamp(2.35rem,5vw,5.2rem)] font-bold leading-[0.98] tracking-[-0.04em] text-forest">
+                {t.hero.titleLine1}{" "}
+                <span className="italic text-orange-zest">
+                  {t.hero.titleHighlight}
+                </span>
+
+                {t.hero.titleLine2 && (
+                  <>
+                    <br />
+                    <span className="relative inline-block">
+                      {t.hero.titleLine2}
+                      <svg
+                        viewBox="0 0 220 22"
+                        aria-hidden="true"
+                        className="absolute -bottom-3 left-0 h-3 w-full text-sunshine"
+                        fill="none"
+                        preserveAspectRatio="none"
+                      >
+                        <path
+                          d="M3 15 C55 2 110 20 217 8"
+                          stroke="currentColor"
+                          strokeWidth="5"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    </span>
+                  </>
+                )}
+              </h1>
+
+              <p className="mt-7 max-w-xl text-base leading-8 text-forest/70 sm:text-lg">
+                {t.hero.subtitle}
+              </p>
+
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <a
+                  href="#contact"
+                  className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-forest px-7 py-3.5 font-semibold text-cream shadow-[0_16px_35px_rgba(20,36,26,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-orange-zest sm:w-auto"
+                >
+                  {t.hero.ctaContact}
+                  <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </a>
+
+                <a
+                  href="#menu"
+                  className="inline-flex w-full items-center justify-center rounded-full border-2 border-forest/15 bg-white/50 px-7 py-3.5 font-semibold text-forest transition duration-300 hover:border-forest hover:bg-white sm:w-auto"
+                >
+                  {t.hero.ctaMenu}
+                </a>
+              </div>
+
+              <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-forest/10 pt-7">
+                <div>
+                  <p className="text-3xl font-bold text-forest">4.9</p>
+                  <div className="mt-1 flex items-center gap-1 text-orange-zest">
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <Star key={index} className="size-4 fill-current" />
+                    ))}
+                  </div>
+                </div>
+
+                <div className="h-12 w-px bg-forest/10" />
+
+                <p className="max-w-[220px] text-sm font-medium leading-6 text-forest/[0.65]">
+                  {t.hero.rating}
+                </p>
+              </div>
             </motion.div>
-          </motion.div>
- 
-          {/* Desno - Slika */}
-          <motion.div style={{ y: yImg }} className="relative h-[300px] sm:h-[400px] md:h-[600px] lg:h-[620px] flex justify-center items-end order-1 lg:order-2">
+
+            {/* Žena, certifikat i floating elementi */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              className="absolute inset-0 flex justify-center items-end"
+              style={{ y: yImage }}
+              initial={{ opacity: 0, scale: 0.92, y: 45 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+              className="relative order-1 mx-auto flex min-h-[430px] w-full max-w-[620px] items-end justify-center sm:min-h-[570px] lg:order-2 lg:min-h-[650px]"
             >
+              <div className="absolute inset-x-[4%] bottom-[3%] top-[8%] overflow-hidden rounded-[2.5rem] bg-forest shadow-[0_35px_90px_rgba(20,36,26,0.2)] sm:rounded-[4rem]">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_65%_20%,rgba(255,220,80,0.26),transparent_34%),linear-gradient(145deg,rgba(255,255,255,0.08),transparent_48%)]" />
+                <div className="absolute -left-16 bottom-14 size-52 rounded-full border border-cream/10" />
+                <div className="absolute -right-20 top-16 size-72 rounded-full border border-cream/10" />
+              </div>
+
               <img
                 src={heroGirl}
                 alt="Restoran Garden"
                 width={896}
                 height={1152}
-                className="h-full w-auto object-contain drop-shadow-2xl"
+                loading="lazy"
+                className="relative z-10 max-h-[420px] w-auto max-w-full object-contain drop-shadow-2xl sm:max-h-[560px] lg:max-h-[640px]"
               />
-            </motion.div>
- 
-            {/* Rating floating badge */}
-            <motion.div
-              animate={{ y: [0, 14, 0] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-              className="absolute bottom-4 sm:bottom-8 md:bottom-20 right-2 sm:right-4 md:right-8 bg-cream text-forest rounded-xl md:rounded-2xl p-3 md:p-4 shadow-xl z-20"
-            >
-              <div className="flex items-center gap-1 text-orange-zest">
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <Star key={i} className="size-3 md:size-4 fill-current" />
-                ))}
-              </div>
-              <p className="text-xs md:text-sm font-semibold mt-1">{t.hero.rating}</p>
-            </motion.div>
-          </motion.div>
-        </div>
- 
-        {/* Certifikat - Vidljiv na svim veličinama */}
-        <div className="mt-8 md:mt-12 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.8, duration: 0.8 }}
-            className="flex justify-center md:absolute md:right-0 md:top-0"
-          >
-            <motion.img
-              src={certifikat}
-              alt="Garden Restaurant Recommended"
-              animate={{ y: [0, -8, 0], rotate: [0, 2, 0] }}
-              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
-              className="w-40 h-52 sm:w-48 sm:h-64 md:w-40 md:h-52 lg:w-48 lg:h-64 drop-shadow-lg hover:drop-shadow-2xl transition-all duration-300"
-            />
-          </motion.div>
-        </div>
- 
-        {/* Sekcija za Certifikate i Nagrade - Dno */}
-        <div className="mt-20 md:mt-32 pt-8 md:pt-12 border-t border-cream/20">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-            className="text-center mb-8 md:mb-10"
-          >
-            <h3 className="text-lg md:text-2xl font-semibold text-cream mb-2">
-              Certificiranja i Nagrade
-            </h3>
-            <p className="text-sm md:text-base text-cream/70">
-              Profesionalno priznat i nagrađivan za kvalitet i inovaciju
-            </p>
-          </motion.div>
- 
-          {/* Grid za certifikate - responsivno */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
-            {/* Certifikat 1 */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9 }}
-              className="bg-cream/10 backdrop-blur-sm rounded-lg md:rounded-xl p-4 md:p-6 text-center hover:bg-cream/15 transition-colors duration-300 border border-cream/20"
-            >
-              <div className="text-sunshine text-2xl md:text-3xl mb-2 md:mb-3 flex justify-center">
-                <Award className="size-6 md:size-8" />
-              </div>
-              <h4 className="text-xs md:text-sm font-semibold text-cream mb-1">
-                Najbolji Restoran
-              </h4>
-              <p className="text-xs text-cream/70">2023</p>
-            </motion.div>
- 
-            {/* Certifikat 2 */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.0 }}
-              className="bg-cream/10 backdrop-blur-sm rounded-lg md:rounded-xl p-4 md:p-6 text-center hover:bg-cream/15 transition-colors duration-300 border border-cream/20"
-            >
-              <div className="text-orange-zest text-2xl md:text-3xl mb-2 md:mb-3 flex justify-center">
-                <Trophy className="size-6 md:size-8" />
-              </div>
-              <h4 className="text-xs md:text-sm font-semibold text-cream mb-1">
-                Kulinarna Znamenitost
-              </h4>
-              <p className="text-xs text-cream/70">2022</p>
-            </motion.div>
- 
-            {/* Certifikat 3 */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.1 }}
-              className="bg-cream/10 backdrop-blur-sm rounded-lg md:rounded-xl p-4 md:p-6 text-center hover:bg-cream/15 transition-colors duration-300 border border-cream/20"
-            >
-              <div className="text-sunshine text-2xl md:text-3xl mb-2 md:mb-3 flex justify-center">
-                <GraduationCap className="size-6 md:size-8" />
-              </div>
-              <h4 className="text-xs md:text-sm font-semibold text-cream mb-1">
-                Certificiran Kuvar
-              </h4>
-              <p className="text-xs text-cream/70">Le Cordon Bleu</p>
-            </motion.div>
- 
-            {/* Certifikat 4 */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.2 }}
-              className="bg-cream/10 backdrop-blur-sm rounded-lg md:rounded-xl p-4 md:p-6 text-center hover:bg-cream/15 transition-colors duration-300 border border-cream/20"
-            >
-              <div className="text-leaf text-2xl md:text-3xl mb-2 md:mb-3 flex justify-center">
-                <Leaf className="size-6 md:size-8" />
-              </div>
-              <h4 className="text-xs md:text-sm font-semibold text-cream mb-1">
-                Ekoloska Sertifikacija
-              </h4>
-              <p className="text-xs text-cream/70">2024</p>
+
+              <motion.div
+                animate={{ y: [0, 11, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute left-0 top-[14%] z-20 rounded-2xl border border-white/50 bg-white/85 p-3 shadow-xl backdrop-blur-md sm:left-3 sm:p-4"
+              >
+                <div className="flex items-center gap-1 text-orange-zest">
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <Star key={index} className="size-3.5 fill-current sm:size-4" />
+                  ))}
+                </div>
+                <p className="mt-1.5 text-xs font-bold text-forest sm:text-sm">
+                  {t.hero.rating}
+                </p>
+              </motion.div>
+
+              <motion.div
+                animate={{ y: [0, -9, 0], rotate: [-2, 1, -2] }}
+                transition={{
+                  duration: 5.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 0.4,
+                }}
+                className="absolute -bottom-3 right-0 z-20 rounded-[1.75rem] border border-white/60 bg-white/90 p-2.5 shadow-2xl backdrop-blur-md sm:right-2 sm:p-3"
+              >
+                <img
+                  src={certifikat}
+                  alt="Garden Restaurant Recommended"
+                  loading="lazy"
+                  className="h-auto w-24 object-contain sm:w-32 lg:w-36"
+                />
+              </motion.div>
             </motion.div>
           </div>
+
+          {/* Nagrade */}
+          <div className="mt-20 border-t border-forest/10 pt-10 md:mt-28 md:pt-14">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.4 }}
+              transition={{ duration: 0.7 }}
+              className="mb-8 text-center"
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-orange-zest sm:text-sm">
+                Kvalitet koji je prepoznat
+              </p>
+              <h2 className="mt-3 text-2xl font-bold text-forest sm:text-3xl">
+                Certifikati i nagrade
+              </h2>
+            </motion.div>
+
+            <div className="grid grid-cols-2 gap-3 md:gap-5 lg:grid-cols-4">
+              {awards.map((award, index) => {
+                const Icon = award.icon;
+
+                return (
+                  <motion.article
+                    key={award.title}
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, amount: 0.25 }}
+                    transition={{ duration: 0.6, delay: index * 0.08 }}
+                    whileHover={{ y: -6 }}
+                    className="rounded-2xl border border-forest/10 bg-white/[0.55] p-4 text-center shadow-[0_15px_40px_rgba(20,36,26,0.06)] backdrop-blur transition-colors duration-300 hover:bg-white sm:rounded-3xl sm:p-6"
+                  >
+                    <div className="mx-auto flex size-11 items-center justify-center rounded-full bg-forest/[0.06] sm:size-14">
+                      <Icon className={`size-5 sm:size-7 ${award.iconClassName}`} />
+                    </div>
+                    <h3 className="mt-4 text-sm font-bold text-forest sm:text-base">
+                      {award.title}
+                    </h3>
+                    <p className="mt-1 text-xs text-forest/[0.55] sm:text-sm">
+                      {award.subtitle}
+                    </p>
+                  </motion.article>
+                );
+              })}
+            </div>
+          </div>
         </div>
-      </div>
- 
-      {/* SVG talasa na dnu */}
-      <svg
-        viewBox="0 0 1440 120"
-        className="absolute bottom-0 left-0 w-full text-cream"
-        preserveAspectRatio="none"
-      >
-        <path fill="currentColor" d="M0,80 C360,140 1080,0 1440,60 L1440,120 L0,120 Z" />
-      </svg>
-    </section>
+      </section>
+    </>
   );
 }
 
