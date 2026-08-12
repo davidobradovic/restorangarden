@@ -33,18 +33,18 @@ import heroGirl from "@/assets/andjelagaco.jpg";
 import aboutImg1 from "@/assets/galerija-nova/specijalitet4.JPG";
 import aboutImg2 from "@/assets/galerija/1.jpg";
 import aboutImg3 from "@/assets/galerija-nova/biftek.JPG";
-import imgDorucak from "@/assets/galerija-nova/dorucak.JPG";
-import imgMeze from "@/assets/galerija-nova/meze.JPG";
-import imgUstipci from "@/assets/galerija-nova/ustipci.JPG";
-import imgPizza from "@/assets/galerija-nova/slatka-pita.JPG";
-import imgSupa from "@/assets/galerija-nova/slano.JPG";
-import imgPasta from "@/assets/galerija-nova/pasta.JPG";
-import imgSalata from "@/assets/galerija-nova/biftek2.JPG";
-import imgPiletina from "@/assets/galerija-nova/specijalitet.JPG";
-import imgTeletina from "@/assets/galerija-nova/biftek3.JPG";
-import imgRostilj from "@/assets/galerija-nova/specijaliteti.JPG";
-import imgRiba from "@/assets/galerija-nova/riba.JPG";
-import imgPoslastice from "@/assets/galerija-nova/kolaci.JPG";
+import menuDorucak from "@/assets/menislike/dorucakgarden.jpeg";
+import menuHladno from "@/assets/menislike/hladnopredjelo.jpeg";
+import menuUstipci from "@/assets/menislike/ustipci.jpeg";
+import menuPizza from "@/assets/menislike/heljdinepice.jpg";
+import menuSupa from "@/assets/menislike/menu_corbe.avif";
+import menuPasta from "@/assets/menislike/pastasapiletinom.jpeg";
+import menuSalata from "@/assets/menislike/cezarsalata.mp4";
+import menuPiletina from "@/assets/menislike/punjenapiletina.jpeg";
+import menuTeletina from "@/assets/menislike/telecabajadera.jpeg";
+import menuRostilj from "@/assets/menislike/lov.jpeg";
+import menuRiba from "@/assets/menislike/filelososa.jpeg";
+import menuPoslastice from "@/assets/menislike/cokoladnikolac.jpeg";
 import heroWP from "@/assets/web-garden2_1920px2.jpg";
 import statsImage from "@/assets/galerija/MG_3661_prcsd_srgb.jpg";
 import contactImg from "@/assets/kontaktslika.webp";
@@ -75,20 +75,28 @@ const EMAIL = "restorangarden@yahoo.com";
 const INSTAGRAM = "https://www.instagram.com/restaurantgarden2018/";
 const FACEBOOK = "https://www.facebook.com/restaurantgarden2018";
 
-const categoryImages: Record<MenuCategoryKey, string> = {
-  breakfast: imgDorucak,
-  coldStarters: imgMeze,
-  hotStarters: imgUstipci,
-  buckwheatPizza: imgPizza,
-  soups: imgSupa,
-  pasta: imgPasta,
-  salads: imgSalata,
-  poultry: imgPiletina,
-  vealPork: imgTeletina,
-  grill: imgRostilj,
-  fish: imgRiba,
-  desserts: imgPoslastice,
+const categoryVideos: Partial<Record<MenuCategoryKey, string>> = {
+  salads: menuSalata,
 };
+
+const categoryImages: Record<MenuCategoryKey, string> = {
+  breakfast: menuDorucak,
+  coldStarters: menuHladno,
+  hotStarters: menuUstipci,
+  buckwheatPizza: menuPizza,
+  soups: menuSupa,
+  pasta: menuPasta,
+  salads: menuSalata,
+  poultry: menuPiletina,
+  vealPork: menuTeletina,
+  grill: menuRostilj,
+  fish: menuRiba,
+  desserts: menuPoslastice,
+};
+
+function loadAssetImages(modules: Record<string, { default: string }>): string[] {
+  return Object.values(modules).map((m) => m.default);
+}
 
 const galleryModules = import.meta.glob<{ default: string }>(
   "@/assets/galerija/*.{jpg,JPG,jpeg,png}",
@@ -98,6 +106,43 @@ const galleryImages = Object.values(galleryModules).map((mod) => ({
   src: mod.default,
   alt: "Restoran Garden — galerija",
 }));
+
+const galleryFallback = galleryImages.map((img) => img.src);
+
+const playgroundModules = import.meta.glob<{ default: string }>(
+  "@/assets/djecije-igraliste/*.{jpg,JPG,jpeg,png,webp}",
+  { eager: true },
+);
+const wineWorkshopModules = import.meta.glob<{ default: string }>(
+  "@/assets/vinska-radionica/*.{jpg,JPG,jpeg,png,webp}",
+  { eager: true },
+);
+const fireplaceModules = import.meta.glob<{ default: string }>(
+  "@/assets/kamin-sala/*.{jpg,JPG,jpeg,png,webp}",
+  { eager: true },
+);
+const eventsModules = import.meta.glob<{ default: string }>(
+  "@/assets/organizacija-svecanosti/*.{jpg,JPG,jpeg,png,webp}",
+  { eager: true },
+);
+
+const featureTabImages = {
+  playground: loadAssetImages(playgroundModules),
+  wineWorkshop: loadAssetImages(wineWorkshopModules),
+  fireplaceRoom: loadAssetImages(fireplaceModules),
+  events: loadAssetImages(eventsModules),
+};
+
+function getTabImages(tab: keyof typeof featureTabImages): string[] {
+  const folderImages = featureTabImages[tab];
+  if (folderImages.length > 0) return folderImages;
+
+  const fallbackStart = tab === "playground" ? 0 : tab === "fireplaceRoom" ? 6 : tab === "events" ? 12 : 0;
+  if (tab === "wineWorkshop") {
+    return galleryFallback.slice(0, 6);
+  }
+  return galleryFallback.slice(fallbackStart, fallbackStart + 6);
+}
 
 const siteVideos = [
   { src: videoLjeto, key: "summer" as const },
@@ -112,10 +157,6 @@ const tabVideoMap = {
   fireplaceRoom: videoLjeto,
   events: videoSpecijaliteti,
 } as const;
-
-const wineWorkshopModules = import.meta.glob<{ default: string }>('@/assets/vinska-radionica/*.{JPG,jpg,jpeg,png}', { eager: true });
-const wineWorkshopImages = Object.values(wineWorkshopModules).map(m => m.default);
-
 
 // raspored velicina kartica — ciklicno se ponavlja svakih 7 slika radi raznovrsnosti
 const bentoPattern = [
@@ -156,19 +197,38 @@ const fadeUp = {
   transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
 };
 
-function VideoPlayer({ src, poster, label }: { src: string; poster?: string; label?: string }) {
+function VideoPlayer({
+  src,
+  poster,
+  label,
+  portrait = false,
+}: {
+  src: string;
+  poster?: string;
+  label?: string;
+  portrait?: boolean;
+}) {
   return (
-    <div className="relative aspect-auto rounded-2xl overflow-hidden shadow-xl bg-forest/10 border border-forest/10">
+    <div
+      className={`relative overflow-hidden rounded-2xl shadow-xl bg-black/90 border border-forest/10 ${
+        portrait ? "aspect-[9/16] w-full max-w-[300px] mx-auto" : "aspect-video w-full"
+      }`}
+    >
       <video
         src={src}
         poster={poster}
         controls
         playsInline
         preload="metadata"
-        className="w-full h-full object-cover"
+        className="w-full h-full object-contain"
       >
         <track kind="captions" />
       </video>
+      {label && (
+        <p className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-forest/90 to-transparent px-4 py-3 text-cream text-sm font-medium pointer-events-none">
+          {label}
+        </p>
+      )}
     </div>
   );
 }
@@ -934,12 +994,23 @@ function MenuSection() {
                 }`}
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
-                  <img
-                    src={categoryImages[key]}
-                    alt={cat.title}
-                    loading="lazy"
-                    className="w-full h-full object-cover"
-                  />
+                  {categoryVideos[key] ? (
+                    <video
+                      src={categoryVideos[key]}
+                      muted
+                      loop
+                      playsInline
+                      autoPlay
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <img
+                      src={categoryImages[key]}
+                      alt={cat.title}
+                      loading="lazy"
+                      className="w-full h-full object-cover"
+                    />
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-forest/90 via-forest/20 to-transparent" />
                   <h3 className="absolute bottom-0 left-0 right-0 p-4 font-display text-lg">
                     {cat.title}
@@ -981,13 +1052,7 @@ function FeaturesTabs() {
 
   const activeData = f[activeTab];
 
-  // Pick images based on active tab
-  const tabImages =
-    activeTab === "wineWorkshop"
-      ? wineWorkshopImages
-      : galleryImages.slice(activeTab === "playground" ? 0 : activeTab === "fireplaceRoom" ? 6 : 12, 
-          activeTab === "playground" ? 6 : activeTab === "fireplaceRoom" ? 12 : 18).map(img => img.src);
-
+  const tabImages = getTabImages(activeTab);
   const heroImage = tabImages[0];
   const gridImages = tabImages.slice(1, 5);
 
@@ -1054,6 +1119,7 @@ function FeaturesTabs() {
             <VideoPlayer
               src={tabVideoMap[activeTab]}
               poster={heroImage}
+              portrait
               label={t.videos.items[activeTab === "playground" ? "family" : activeTab === "wineWorkshop" ? "wine" : activeTab === "fireplaceRoom" ? "summer" : "specialties"]}
             />
           </div>
@@ -1115,7 +1181,7 @@ function VideosSection() {
           {t.videos.subtitle}
         </motion.p>
 
-        <div className="mt-12 grid sm:grid-cols-2 gap-6">
+        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
           {siteVideos.map(({ src, key }, i) => (
             <motion.div
               key={key}
@@ -1123,8 +1189,9 @@ function VideosSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
+              className="flex justify-center"
             >
-              <VideoPlayer src={src} label={t.videos.items[key]} />
+              <VideoPlayer src={src} label={t.videos.items[key]} portrait />
             </motion.div>
           ))}
         </div>
