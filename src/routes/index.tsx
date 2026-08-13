@@ -46,9 +46,7 @@ import menuRostilj from "@/assets/menislike/lov.jpeg";
 import menuRiba from "@/assets/menislike/filelososa.jpeg";
 import menuPoslastice from "@/assets/menislike/cokoladnikolac.jpeg";
 import heroWP from "@/assets/web-garden2_1920px2.jpg";
-import statsImage from "@/assets/galerija/MG_3661_prcsd_srgb.jpg";
 import contactImg from "@/assets/kontaktslika.webp";
-import testi1 from "@/assets/galerija/MG_3729_prcsd_srgb.jpg";
 import testi2 from "@/assets/galerija-nova/kafe.JPG";
 import logo from "@/assets/logo-garden.png";
 import videoLjeto from "@/assets/videi/ljetougardenu.MP4";
@@ -778,7 +776,7 @@ export default function Hero() {
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              className="relative order-1 mx-auto flex min-h-[430px] w-full max-w-[620px] items-end justify-center sm:min-h-[570px] lg:order-2 lg:min-h-[650px]"
+              className="relative order-1 mx-auto flex min-h-[430px] w-full max-w-[620px] items-start justify-center sm:min-h-[570px] lg:order-2 lg:min-h-[650px]"
             >
               <div className="absolute inset-x-[4%] bottom-[3%] top-[8%] overflow-hidden rounded-[2.5rem] bg-forest shadow-[0_35px_90px_rgba(20,36,26,0.2)] sm:rounded-[4rem]">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_65%_20%,rgba(255,220,80,0.26),transparent_34%),linear-gradient(145deg,rgba(255,255,255,0.08),transparent_48%)]" />
@@ -787,12 +785,10 @@ export default function Hero() {
               </div>
 
               <img
-                src={heroGirl}
+                src={aboutImg2}
                 alt="Restoran Garden"
-                width={896}
-                height={1152}
                 loading="lazy"
-                className="relative z-10 max-h-[420px] w-auto max-w-full object-contain drop-shadow-2xl sm:max-h-[560px] lg:max-h-[640px]"
+                className="relative z-10 aspect-square w-auto max-w-full object-contain drop-shadow-2xl"
               />
 
               <motion.div
@@ -830,7 +826,7 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* Nagrade */}
+          {/* Nagrade
           <div className="mt-20 border-t border-forest/10 pt-10 md:mt-28 md:pt-14">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -874,7 +870,7 @@ export default function Hero() {
                 );
               })}
             </div>
-          </div>
+          </div> */}
         </div>
       </section>
     </>
@@ -1120,7 +1116,7 @@ function FeaturesTabs() {
               src={tabVideoMap[activeTab]}
               poster={heroImage}
               portrait
-              label={t.videos.items[activeTab === "playground" ? "family" : activeTab === "wineWorkshop" ? "wine" : activeTab === "fireplaceRoom" ? "summer" : "specialties"]}
+              // label={t.videos.items[activeTab === "playground" ? "family" : activeTab === "wineWorkshop" ? "wine" : activeTab === "fireplaceRoom" ? "summer" : "specialties"]}
             />
           </div>
 
@@ -1162,11 +1158,173 @@ function FeaturesTabs() {
 
 
 
+function VideoCoverflowCarousel() {
+  const { t } = useLanguage();
+  const [active, setActive] = useState(0);
+  const [slideGap, setSlideGap] = useState(110);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+
+  useEffect(() => {
+    const update = () => setSlideGap(window.innerWidth < 640 ? 85 : 130);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
+  const goTo = (index: number) =>
+    setActive((index + siteVideos.length) % siteVideos.length);
+
+  useEffect(() => {
+    videoRefs.current.forEach((video, i) => {
+      if (!video) return;
+      if (i === active) {
+        video.muted = false;
+        void video.play().catch(() => {});
+      } else {
+        video.pause();
+        video.currentTime = 0;
+        video.muted = true;
+      }
+    });
+  }, [active]);
+
+  const getOffset = (index: number) => {
+    const len = siteVideos.length;
+    let diff = index - active;
+    if (diff > len / 2) diff -= len;
+    if (diff < -len / 2) diff += len;
+    return diff;
+  };
+
+  const activeVideo = siteVideos[active];
+
+  return (
+    <div className="mt-14 md:mt-20 relative">
+      <div className="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 h-64 bg-sunshine/10 blur-[100px] rounded-full" />
+
+      <div className="relative flex items-center justify-center gap-4 md:gap-6">
+        <button
+          type="button"
+          onClick={() => goTo(active - 1)}
+          className="hidden sm:grid place-items-center size-12 rounded-full bg-cream/10 border border-cream/20 text-cream hover:bg-sunshine hover:text-forest transition-colors shrink-0 z-20"
+          aria-label={t.gallery.prev}
+        >
+          <ChevronLeft className="size-6" />
+        </button>
+
+        <div
+          className="relative w-full max-w-5xl h-[420px] sm:h-[480px] md:h-[540px] flex items-center justify-center"
+          style={{ perspective: "1400px" }}
+        >
+          {siteVideos.map(({ src, key }, i) => {
+            const offset = getOffset(i);
+            const isActive = offset === 0;
+            const absOffset = Math.abs(offset);
+            if (absOffset > 2) return null;
+
+            return (
+              <motion.button
+                key={key}
+                type="button"
+                onClick={() => !isActive && goTo(i)}
+                initial={false}
+                animate={{
+                  x: offset * slideGap,
+                  scale: isActive ? 1 : 0.68 - absOffset * 0.06,
+                  rotateY: offset * -22,
+                  rotateZ: offset * 3,
+                  opacity: isActive ? 1 : 0.35 - absOffset * 0.08,
+                  zIndex: 20 - absOffset,
+                }}
+                transition={{ type: "spring", stiffness: 280, damping: 30 }}
+                className={`absolute w-[200px] sm:w-[240px] md:w-[280px] aspect-[9/16] rounded-3xl overflow-hidden shadow-2xl origin-center ${
+                  isActive ? "cursor-default ring-2 ring-sunshine/60" : "cursor-pointer"
+                }`}
+                style={{
+                  filter: isActive ? "none" : `blur(${absOffset * 3 + 2}px)`,
+                  transformStyle: "preserve-3d",
+                }}
+              >
+                <video
+                  ref={(el) => {
+                    videoRefs.current[i] = el;
+                  }}
+                  src={src}
+                  playsInline
+                  preload="metadata"
+                  controls={isActive}
+                  muted={!isActive}
+                  className="w-full h-full object-cover bg-black"
+                />
+                {!isActive && (
+                  <div className="absolute inset-0 bg-forest/25 pointer-events-none" />
+                )}
+              </motion.button>
+            );
+          })}
+        </div>
+
+        <button
+          type="button"
+          onClick={() => goTo(active + 1)}
+          className="hidden sm:grid place-items-center size-12 rounded-full bg-cream/10 border border-cream/20 text-cream hover:bg-sunshine hover:text-forest transition-colors shrink-0 z-20"
+          aria-label={t.gallery.next}
+        >
+          <ChevronRight className="size-6" />
+        </button>
+      </div>
+
+      <motion.div
+        key={activeVideo.key}
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35 }}
+        className="mt-8 text-center space-y-4"
+      >
+        <p className="font-display text-xl md:text-2xl text-sunshine">
+          {t.videos.items[activeVideo.key]}
+        </p>
+        <div className="flex justify-center gap-2">
+          {siteVideos.map(({ key }, i) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => goTo(i)}
+              aria-label={t.videos.items[siteVideos[i].key]}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                i === active ? "w-10 bg-sunshine" : "w-2 bg-cream/30 hover:bg-cream/50"
+              }`}
+            />
+          ))}
+        </div>
+        <div className="flex sm:hidden justify-center gap-4 pt-2">
+          <button
+            type="button"
+            onClick={() => goTo(active - 1)}
+            className="grid place-items-center size-11 rounded-full bg-cream/10 border border-cream/20"
+            aria-label={t.gallery.prev}
+          >
+            <ChevronLeft className="size-5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => goTo(active + 1)}
+            className="grid place-items-center size-11 rounded-full bg-cream/10 border border-cream/20"
+            aria-label={t.gallery.next}
+          >
+            <ChevronRight className="size-5" />
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
 function VideosSection() {
   const { t } = useLanguage();
 
   return (
-    <section id="videos" className="bg-forest text-cream py-24 md:py-32">
+    <section id="videos" className="bg-forest text-cream py-24 md:py-32 overflow-hidden">
       <div className="max-w-6xl mx-auto px-4">
         <motion.p {...fadeUp} className="text-script text-3xl text-sunshine text-center">
           {t.videos.label}
@@ -1181,20 +1339,7 @@ function VideosSection() {
           {t.videos.subtitle}
         </motion.p>
 
-        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
-          {siteVideos.map(({ src, key }, i) => (
-            <motion.div
-              key={key}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08 }}
-              className="flex justify-center"
-            >
-              <VideoPlayer src={src} label={t.videos.items[key]} portrait />
-            </motion.div>
-          ))}
-        </div>
+        <VideoCoverflowCarousel />
       </div>
     </section>
   );
@@ -1699,10 +1844,10 @@ function IndexContent() {
       <FeaturesTabs />
       <VideosSection />
       <GallerySection />
-      <Stats />
-      <Testimonials />
+      {/* <Stats /> */}
+      {/* <Testimonials /> */}
       <ContactSection />
-      <Footer />
+      {/* <Footer /> */}
     </main>
   );
 }
