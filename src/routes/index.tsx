@@ -49,7 +49,7 @@ import heroWP from "@/assets/wallpaper.jpg";
 import contactImg from "@/assets/kontaktslika.webp";
 import testi2 from "@/assets/galerija-nova/kafe.JPG";
 import logo from "@/assets/logo-garden.png";
-import videoLjeto from "@/assets/videi/ljetougardenu.MP4";
+import videoLjeto from "@/assets/videi/videlista.mp4";
 import videoPorodicni from "@/assets/videi/porodicnivikend.MP4";
 import videoSpecijaliteti from "@/assets/videi/specijaliteti.MP4";
 import videoVinska from "@/assets/vinska-radionica/vinskaradionicavideo.mp4";
