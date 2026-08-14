@@ -36,23 +36,23 @@ import aboutImg3 from "@/assets/galerija-nova/biftek.JPG";
 import menuDorucak from "@/assets/menislike/dorucakgarden.jpeg";
 import menuHladno from "@/assets/menislike/hladnopredjelo.jpeg";
 import menuUstipci from "@/assets/menislike/ustipci.jpeg";
-import menuPizza from "@/assets/menislike/heljdinepice.jpg";
-import menuSupa from "@/assets/menislike/menu_corbe.avif";
+import menuPizza from "@/assets/menislike/heljdinepice.jpeg";
+import menuSupa from "@/assets/menislike/supeicorbe.jpeg";
 import menuPasta from "@/assets/menislike/pastasapiletinom.jpeg";
 import menuSalata from "@/assets/menislike/cezarsalata.mp4";
 import menuPiletina from "@/assets/menislike/punjenapiletina.jpeg";
 import menuTeletina from "@/assets/menislike/telecabajadera.jpeg";
-import menuRostilj from "@/assets/menislike/lov.jpeg";
-import menuRiba from "@/assets/menislike/filelososa.jpeg";
+import menuRostilj from "@/assets/menislike/jelasarostilja.jpeg";
+import menuRiba from "@/assets/menislike/ribljajela.jpeg";
 import menuPoslastice from "@/assets/menislike/cokoladnikolac.jpeg";
-import heroWP from "@/assets/web-garden2_1920px2.jpg";
+import heroWP from "@/assets/wallpaper.jpg";
 import contactImg from "@/assets/kontaktslika.webp";
 import testi2 from "@/assets/galerija-nova/kafe.JPG";
 import logo from "@/assets/logo-garden.png";
 import videoLjeto from "@/assets/videi/ljetougardenu.MP4";
 import videoPorodicni from "@/assets/videi/porodicnivikend.MP4";
 import videoSpecijaliteti from "@/assets/videi/specijaliteti.MP4";
-import videoVinska from "@/assets/videi/vinskaradionica.MP4";
+import videoVinska from "@/assets/vinska-radionica/vinskaradionicavideo.mp4";
 import paprika from "@/assets/sliced-paprika.png";
 import veg1 from "@/assets/001-1.png";
 import veg2 from "@/assets/004-1.png";
@@ -650,229 +650,162 @@ export default function Hero() {
 
       {/* NOVA SEKCIJA: tekst, žena, rating, certifikat i nagrade */}
       <section
-        ref={storyRef}
-        id="garden-intro"
-        className="relative overflow-hidden bg-cream text-forest"
+  ref={storyRef}
+  id="garden-intro"
+  className="relative overflow-hidden bg-forest text-cream"
+>
+  {/* Pozadinski dekorativni elementi */}
+  <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+    <div className="absolute -left-40 top-24 size-[420px] rounded-full bg-sunshine/[0.06] blur-3xl" />
+    <div className="absolute -right-32 bottom-40 size-[380px] rounded-full bg-sunshine/10 blur-3xl" />
+  </div>
+
+  {/* Povrće - raspoređeno organski po cijeloj sekciji, ne samo oko slike */}
+  {heroProduce.map((item, index) => (
+    <motion.div
+      key={`intro-${item.src}-${index}`}
+      aria-hidden="true"
+      initial={{ opacity: 0, y: -20, scale: 0.85, rotate: item.rotation }}
+      whileInView={{ opacity: 1, y: 0, scale: 1, rotate: item.rotation }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.7, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+      className={`pointer-events-none absolute z-10 select-none ${
+        item.hideOnMobile ? "hidden sm:block" : "block"
+      }`}
+      style={{
+        left: item.introLeft ?? item.left,
+        top: item.introTop ?? item.top,
+        width: item.introWidth ?? item.width,
+      }}
+    >
+      <motion.img
+        src={item.src}
+        alt=""
+        loading="lazy"
+        draggable={false}
+        animate={{ y: [0, -10, 0], rotate: [0, 3, 0] }}
+        transition={{
+          duration: item.duration,
+          delay: item.delay,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        className="h-auto w-full opacity-95 drop-shadow-[0_10px_16px_rgba(0,0,0,0.28)]"
+      />
+    </motion.div>
+  ))}
+
+  <div className="relative z-20 mx-auto max-w-5xl px-4 py-20 text-center sm:px-6 md:py-28 lg:py-32">
+    {/* Eyebrow */}
+    <motion.p
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6 }}
+      className=" text-xl italic text-script text-sunshine sm:text-2xl"
+    >
+      Restoran Garden
+    </motion.p>
+
+    {/* Naslov */}
+    <motion.h2
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.7, delay: 0.1 }}
+      className="text-display mt-3 text-[clamp(2.1rem,5vw,3.8rem)] font-bold leading-[1.05] tracking-[-0.03em] text-cream"
+    >
+      Stotine ukusa pod jednim krovom,
+      <br />
+      <span className="relative inline-block">
+        u jednoj bašti
+        <svg
+          viewBox="0 0 220 22"
+          aria-hidden="true"
+          className="absolute -bottom-2 left-0 h-3 w-full text-sunshine"
+          fill="none"
+          preserveAspectRatio="none"
+        >
+          <path d="M3 15 C55 2 110 20 217 8" stroke="currentColor" strokeWidth="5" strokeLinecap="round" />
+        </svg>
+      </span>
+    </motion.h2>
+
+    <motion.p
+      initial={{ opacity: 0, y: 12 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: 0.2 }}
+      className="mx-auto mt-6 max-w-xl text-base leading-8 text-cream/70 sm:text-lg"
+    >
+      {t.hero.subtitle}
+    </motion.p>
+
+    {/* Uokvirena scena: slika + rating badge + certifikat */}
+    <motion.div
+      style={{ y: yImage }}
+      initial={{ opacity: 0, scale: 0.94, y: 40 }}
+      whileInView={{ opacity: 1, scale: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+      className="relative z-20 mx-auto mt-16 flex w-full max-w-[420px] items-start justify-center"
+    >
+      <div className="relative w-full overflow-hidden rounded-[2.5rem] border-2 border-sunshine/60 bg-forest shadow-[0_35px_90px_rgba(0,0,0,0.35)]">
+        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_65%_20%,rgba(255,220,80,0.22),transparent_34%)]" />
+        <img
+          src={aboutImg2}
+          alt="Restoran Garden"
+          loading="lazy"
+          className="relative z-10 aspect-[3/4] w-full object-cover"
+        />
+      </div>
+
+      <motion.div
+        animate={{ y: [0, 11, 0] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute -left-4 top-[10%] z-20 rounded-2xl border border-white/50 bg-white/90 p-3 shadow-xl backdrop-blur-md sm:-left-8 sm:p-4"
       >
-        {/* Pozadinski dekorativni elementi */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-          <div className="absolute -left-40 top-24 size-[420px] rounded-full bg-forest/[0.05] blur-2xl" />
-          <div className="absolute -right-32 bottom-40 size-[380px] rounded-full bg-sunshine/15 blur-3xl" />
-
-          <motion.img
-            src={veg3}
-            alt=""
-            animate={{ y: [0, -14, 0], rotate: [-10, -4, -10] }}
-            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute left-[3%] top-[12%] hidden w-24 opacity-[0.15] lg:block xl:w-32"
-          />
-
-          <motion.img
-            src={paprika}
-            alt=""
-            animate={{ y: [0, 12, 0], rotate: [12, 18, 12] }}
-            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute right-[3%] top-[18%] hidden w-20 opacity-[0.15] lg:block xl:w-28"
-          />
+        <div className="flex items-center gap-1 text-orange-zest">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <Star key={index} className="size-3.5 fill-current sm:size-4" />
+          ))}
         </div>
+        <p className="mt-1.5 text-xs font-bold text-forest sm:text-sm">{t.hero.rating}</p>
+      </motion.div>
 
-        <div className="relative z-10 mx-auto max-w-7xl px-4 py-20 sm:px-6 md:py-28 lg:px-8 lg:py-32">
-          <div className="grid items-center gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
-            {/* Tekst */}
-            <motion.div
-              style={{ y: yText }}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
-              variants={reveal}
-              className="relative z-20 order-2 lg:order-1"
-            >
-              <motion.div
-                initial={{ opacity: 0, x: -18 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.65 }}
-                className="mb-5 inline-flex items-center gap-3 rounded-full border border-forest/10 bg-white/[0.65] px-4 py-2 shadow-sm backdrop-blur"
-              >
-                <span className="size-2 rounded-full bg-orange-zest" />
-                <span className="text-xs font-bold uppercase tracking-[0.2em] text-forest/70 sm:text-sm">
-                  Restoran Garden
-                </span>
-              </motion.div>
+      <motion.div
+        animate={{ y: [0, -9, 0], rotate: [-2, 1, -2] }}
+        transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut", delay: 0.4 }}
+        className="absolute -bottom-5 -right-4 z-20 rounded-[1.75rem] border border-white/60 bg-white/95 p-2.5 shadow-2xl backdrop-blur-md sm:-right-8 sm:p-3"
+      >
+        <img
+          src={certifikat}
+          alt="Garden Restaurant Recommended"
+          loading="lazy"
+          className="h-auto w-24 object-contain sm:w-28"
+        />
+      </motion.div>
+    </motion.div>
 
-              <h1 className="text-display text-[clamp(2.35rem,5vw,5.2rem)] font-bold leading-[0.98] tracking-[-0.04em] text-forest">
-                {t.hero.titleLine1}{" "}
-                <span className="italic text-orange-zest">
-                  {t.hero.titleHighlight}
-                </span>
-
-                {t.hero.titleLine2 && (
-                  <>
-                    <br />
-                    <span className="relative inline-block">
-                      {t.hero.titleLine2}
-                      <svg
-                        viewBox="0 0 220 22"
-                        aria-hidden="true"
-                        className="absolute -bottom-3 left-0 h-3 w-full text-sunshine"
-                        fill="none"
-                        preserveAspectRatio="none"
-                      >
-                        <path
-                          d="M3 15 C55 2 110 20 217 8"
-                          stroke="currentColor"
-                          strokeWidth="5"
-                          strokeLinecap="round"
-                        />
-                      </svg>
-                    </span>
-                  </>
-                )}
-              </h1>
-
-              <p className="mt-7 max-w-xl text-base leading-8 text-forest/70 sm:text-lg">
-                {t.hero.subtitle}
-              </p>
-
-              <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <a
-                  href="#contact"
-                  className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-forest px-7 py-3.5 font-semibold text-cream shadow-[0_16px_35px_rgba(20,36,26,0.18)] transition duration-300 hover:-translate-y-0.5 hover:bg-orange-zest sm:w-auto"
-                >
-                  {t.hero.ctaContact}
-                  <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </a>
-
-                <a
-                  href="#menu"
-                  className="inline-flex w-full items-center justify-center rounded-full border-2 border-forest/15 bg-white/50 px-7 py-3.5 font-semibold text-forest transition duration-300 hover:border-forest hover:bg-white sm:w-auto"
-                >
-                  {t.hero.ctaMenu}
-                </a>
-              </div>
-
-              <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-forest/10 pt-7">
-                <div>
-                  <p className="text-3xl font-bold text-forest">4.9</p>
-                  <div className="mt-1 flex items-center gap-1 text-orange-zest">
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <Star key={index} className="size-4 fill-current" />
-                    ))}
-                  </div>
-                </div>
-
-                <div className="h-12 w-px bg-forest/10" />
-
-                <p className="max-w-[220px] text-sm font-medium leading-6 text-forest/[0.65]">
-                  {t.hero.rating}
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Žena, certifikat i floating elementi */}
-            <motion.div
-              style={{ y: yImage }}
-              initial={{ opacity: 0, scale: 0.92, y: 45 }}
-              whileInView={{ opacity: 1, scale: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-              className="relative order-1 mx-auto flex min-h-[430px] w-full max-w-[620px] items-start justify-center sm:min-h-[570px] lg:order-2 lg:min-h-[650px]"
-            >
-              <div className="absolute inset-x-[4%] bottom-[3%] top-[8%] overflow-hidden rounded-[2.5rem] bg-forest shadow-[0_35px_90px_rgba(20,36,26,0.2)] sm:rounded-[4rem]">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_65%_20%,rgba(255,220,80,0.26),transparent_34%),linear-gradient(145deg,rgba(255,255,255,0.08),transparent_48%)]" />
-                <div className="absolute -left-16 bottom-14 size-52 rounded-full border border-cream/10" />
-                <div className="absolute -right-20 top-16 size-72 rounded-full border border-cream/10" />
-              </div>
-
-              <img
-                src={aboutImg2}
-                alt="Restoran Garden"
-                loading="lazy"
-                className="relative z-10 aspect-square w-auto max-w-full object-contain drop-shadow-2xl"
-              />
-
-              <motion.div
-                animate={{ y: [0, 11, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute left-0 top-[14%] z-20 rounded-2xl border border-white/50 bg-white/85 p-3 shadow-xl backdrop-blur-md sm:left-3 sm:p-4"
-              >
-                <div className="flex items-center gap-1 text-orange-zest">
-                  {Array.from({ length: 5 }).map((_, index) => (
-                    <Star key={index} className="size-3.5 fill-current sm:size-4" />
-                  ))}
-                </div>
-                <p className="mt-1.5 text-xs font-bold text-forest sm:text-sm">
-                  {t.hero.rating}
-                </p>
-              </motion.div>
-
-              <motion.div
-                animate={{ y: [0, -9, 0], rotate: [-2, 1, -2] }}
-                transition={{
-                  duration: 5.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 0.4,
-                }}
-                className="absolute -bottom-3 right-0 z-20 rounded-[1.75rem] border border-white/60 bg-white/90 p-2.5 shadow-2xl backdrop-blur-md sm:right-2 sm:p-3"
-              >
-                <img
-                  src={certifikat}
-                  alt="Garden Restaurant Recommended"
-                  loading="lazy"
-                  className="h-auto w-24 object-contain sm:w-32 lg:w-36"
-                />
-              </motion.div>
-            </motion.div>
-          </div>
-
-          {/* Nagrade
-          <div className="mt-20 border-t border-forest/10 pt-10 md:mt-28 md:pt-14">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ duration: 0.7 }}
-              className="mb-8 text-center"
-            >
-              <p className="text-xs font-bold uppercase tracking-[0.24em] text-orange-zest sm:text-sm">
-                Kvalitet koji je prepoznat
-              </p>
-              <h2 className="mt-3 text-2xl font-bold text-forest sm:text-3xl">
-                Certifikati i nagrade
-              </h2>
-            </motion.div>
-
-            <div className="grid grid-cols-2 gap-3 md:gap-5 lg:grid-cols-4">
-              {awards.map((award, index) => {
-                const Icon = award.icon;
-
-                return (
-                  <motion.article
-                    key={award.title}
-                    initial={{ opacity: 0, y: 24 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, amount: 0.25 }}
-                    transition={{ duration: 0.6, delay: index * 0.08 }}
-                    whileHover={{ y: -6 }}
-                    className="rounded-2xl border border-forest/10 bg-white/[0.55] p-4 text-center shadow-[0_15px_40px_rgba(20,36,26,0.06)] backdrop-blur transition-colors duration-300 hover:bg-white sm:rounded-3xl sm:p-6"
-                  >
-                    <div className="mx-auto flex size-11 items-center justify-center rounded-full bg-forest/[0.06] sm:size-14">
-                      <Icon className={`size-5 sm:size-7 ${award.iconClassName}`} />
-                    </div>
-                    <h3 className="mt-4 text-sm font-bold text-forest sm:text-base">
-                      {award.title}
-                    </h3>
-                    <p className="mt-1 text-xs text-forest/[0.55] sm:text-sm">
-                      {award.subtitle}
-                    </p>
-                  </motion.article>
-                );
-              })}
-            </div>
-          </div> */}
-        </div>
-      </section>
+    {/* 4.9 rating ispod, centrirano, kao pratnja */}
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: 0.3 }}
+      className="relative z-20 mx-auto mt-14 inline-flex items-center gap-4 rounded-full border border-cream/15 bg-white/[0.06] px-6 py-3 backdrop-blur"
+    >
+      <span className="text-2xl font-bold text-cream">4.9</span>
+      <div className="flex items-center gap-1 text-sunshine">
+        {Array.from({ length: 5 }).map((_, index) => (
+          <Star key={index} className="size-4 fill-current" />
+        ))}
+      </div>
+      <div className="h-8 w-px bg-cream/15" />
+      <span className="max-w-[200px] text-left text-sm text-cream/60">{t.hero.rating}</span>
+    </motion.div>
+  </div>
+</section>
     </>
   );
 }
