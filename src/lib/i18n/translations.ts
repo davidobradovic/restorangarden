@@ -122,6 +122,7 @@ export type Translation = {
     events: { title: string; desc: string; videoLabel: string; };
   };
   contact: {
+    getDirections: string;
     label: string;
     title: string;
     subtitle: string;
@@ -316,6 +317,7 @@ export const translations: Record<Locale, Translation> = {
       }
     },
     contact: {
+      getDirections: "Postavi rutu",
       label: "kontakt",
       title: "Posjetite nas",
       subtitle: "Rezervacije i informacije — pozovite nas ili pišite putem društvenih mreža.",
@@ -508,6 +510,7 @@ export const translations: Record<Locale, Translation> = {
       }
     },
     contact: {
+      getDirections: "Set route",
       label: "contact",
       title: "Visit us",
       subtitle: "Reservations and info — call us or reach out on social media.",
@@ -700,6 +703,7 @@ export const translations: Record<Locale, Translation> = {
       }
     },
     contact: {
+      getDirections: "Route festlegen",
       label: "kontakt",
       title: "Besuchen Sie uns",
       subtitle: "Reservierungen und Infos — rufen Sie uns an oder schreiben Sie uns.",
@@ -892,6 +896,7 @@ export const translations: Record<Locale, Translation> = {
       }
     },
     contact: {
+      getDirections: "Проложить маршрут",
       label: "контакты",
       title: "Посетите нас",
       subtitle: "Бронирование и информация — звоните или пишите в соцсетях.",
@@ -1085,6 +1090,7 @@ export const translations: Record<Locale, Translation> = {
       label: "联系",
       title: "欢迎光临",
       subtitle: "预订与咨询——请致电或通过社交媒体联系我们。",
+      getDirections: "设定路线",
       phone: "电话",
       address: "地址",
       email: "电子邮件",

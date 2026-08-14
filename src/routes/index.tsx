@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { motion, useScroll, useTransform } from "motion/react";
+import { AnimatePresence, motion, useScroll, useTransform } from "motion/react";
 import {
   Award,
   ArrowRight,
@@ -26,6 +26,11 @@ import {
   ZoomIn,
   Leaf,
   Trophy,
+  Maximize2,
+  ChevronUp,
+  ChevronDown,
+  TrendingUp,
+  Stars,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
@@ -39,7 +44,7 @@ import menuUstipci from "@/assets/menislike/ustipci.jpeg";
 import menuPizza from "@/assets/menislike/heljdinepice.jpeg";
 import menuSupa from "@/assets/menislike/supeicorbe.jpeg";
 import menuPasta from "@/assets/menislike/pastasapiletinom.jpeg";
-import menuSalata from "@/assets/menislike/cezarsalata.mp4";
+import menuSalata from "@/assets/menislike/cezarsalata.png";
 import menuPiletina from "@/assets/menislike/punjenapiletina.jpeg";
 import menuTeletina from "@/assets/menislike/telecabajadera.jpeg";
 import menuRostilj from "@/assets/menislike/jelasarostilja.jpeg";
@@ -72,10 +77,8 @@ const ADDRESS = "Rogoušići bb, Pale";
 const EMAIL = "restorangarden@yahoo.com";
 const INSTAGRAM = "https://www.instagram.com/restaurantgarden2018/";
 const FACEBOOK = "https://www.facebook.com/restaurantgarden2018";
-
-const categoryVideos: Partial<Record<MenuCategoryKey, string>> = {
-  salads: menuSalata,
-};
+const GOOGLE_MAPS = "https://www.google.com/maps?um=1&ie=UTF-8&fb=1&gl=ba&sa=X&geocode=KXXluq01xVhHMSUZXKJ9whUG&daddr=bb,+Rogou%C5%A1i%C4%87i+71428";
+const TRIPADVISOR = "https://www.tripadvisor.com/Restaurant_Review-g2613475-d15755975-Reviews-Restaurant_Garden-Pale_Republika_Srpska.html"
 
 const categoryImages: Record<MenuCategoryKey, string> = {
   breakfast: menuDorucak,
@@ -652,7 +655,7 @@ export default function Hero() {
       <section
   ref={storyRef}
   id="garden-intro"
-  className="relative overflow-hidden bg-forest text-cream"
+  className="relative overflow-hidden bg-white text-forest"
 >
   {/* Pozadinski dekorativni elementi */}
   <div aria-hidden="true" className="pointer-events-none absolute inset-0">
@@ -702,7 +705,7 @@ export default function Hero() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6 }}
-      className=" text-xl italic text-script text-sunshine sm:text-2xl"
+      className=" text-xl italic text-script text-forest sm:text-2xl"
     >
       Restoran Garden
     </motion.p>
@@ -713,7 +716,7 @@ export default function Hero() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.7, delay: 0.1 }}
-      className="text-display mt-3 text-[clamp(2.1rem,5vw,3.8rem)] font-bold leading-[1.05] tracking-[-0.03em] text-cream"
+      className="text-display mt-3 text-[clamp(2.1rem,5vw,3.8rem)] font-bold leading-[1.05] tracking-[-0.03em] text-forest"
     >
       Stotine ukusa pod jednim krovom,
       <br />
@@ -736,7 +739,7 @@ export default function Hero() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay: 0.2 }}
-      className="mx-auto mt-6 max-w-xl text-base leading-8 text-cream/70 sm:text-lg"
+      className="mx-auto mt-6 max-w-xl text-base leading-8 text-forest/70 sm:text-lg"
     >
       {t.hero.subtitle}
     </motion.p>
@@ -793,16 +796,16 @@ export default function Hero() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.6, delay: 0.3 }}
-      className="relative z-20 mx-auto mt-14 inline-flex items-center gap-4 rounded-full border border-cream/15 bg-white/[0.06] px-6 py-3 backdrop-blur"
+      className="relative z-20 mx-auto mt-14 inline-flex items-center gap-4 rounded-full border border-cream/15 bg-black/[0.06] px-6 py-3 backdrop-blur"
     >
-      <span className="text-2xl font-bold text-cream">4.9</span>
-      <div className="flex items-center gap-1 text-sunshine">
+      <span className="text-2xl font-bold text-forest">4.9</span>
+      <div className="flex items-center gap-1 text-forest">
         {Array.from({ length: 5 }).map((_, index) => (
-          <Star key={index} className="size-4 fill-current" />
+          <Star key={index} className="size-4 fill-forest" />
         ))}
       </div>
-      <div className="h-8 w-px bg-cream/15" />
-      <span className="max-w-[200px] text-left text-sm text-cream/60">{t.hero.rating}</span>
+      <div className="h-8 w-px bg-forest/15" />
+      <span className="max-w-[200px] text-left text-sm text-forest/60">{t.hero.rating}</span>
     </motion.div>
   </div>
 </section>
@@ -867,6 +870,39 @@ function Banner() {
 
   return (
     <section className="bg-cream text-cream py-20 md:py-28 relative overflow-hidden">
+      {heroProduce.map((item, index) => (
+    <motion.div
+      key={`intro-${item.src}-${index}`}
+      aria-hidden="true"
+      initial={{ opacity: 0, y: -20, scale: 0.85, rotate: item.rotation }}
+      whileInView={{ opacity: 1, y: 0, scale: 1, rotate: item.rotation }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.7, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+      className={`pointer-events-none absolute z-10 select-none ${
+        item.hideOnMobile ? "hidden sm:block" : "block"
+      }`}
+      style={{
+        left: item.introLeft ?? item.left,
+        top: item.introTop ?? item.top,
+        width: item.introWidth ?? item.width,
+      }}
+    >
+      <motion.img
+        src={item.src}
+        alt=""
+        loading="lazy"
+        draggable={false}
+        animate={{ y: [0, -10, 0], rotate: [0, 3, 0] }}
+        transition={{
+          duration: item.duration,
+          delay: item.delay,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        className="h-auto w-full opacity-95 drop-shadow-[0_10px_16px_rgba(0,0,0,0.28)]"
+      />
+    </motion.div>
+  ))}
       <ChefHat className="absolute left-[8%] top-1/2 -translate-y-1/2 size-20 opacity-30 -rotate-12 hidden md:block" />
       <Utensils className="absolute right-[10%] top-[20%] size-14 opacity-30 rotate-12 hidden md:block" />
       <Coffee className="absolute right-[6%] bottom-[18%] size-16 opacity-30 hidden md:block" />
@@ -876,7 +912,7 @@ function Banner() {
         className="text-display text-center text-forest text-[clamp(2.5rem,7vw,5.5rem)] max-w-5xl mx-auto px-4"
       >
         {t.banner.line1} <span className="italic">{t.banner.passion}</span>,<br />
-        {t.banner.line2} <span className="text-sunshine">{t.banner.love}</span>
+        {t.banner.line2} <span className="">{t.banner.love}</span>
       </motion.h2>
     </section>
   );
@@ -885,25 +921,31 @@ function Banner() {
 function MenuSection() {
   const { t } = useLanguage();
   const [active, setActive] = useState<MenuCategoryKey>(menuCategoryKeys[0]);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const activeCategory = t.menu.categories[active];
 
   return (
-    <section id="menu" className="bg-forest text-cream py-24 md:py-32 relative">
-      <div className="max-w-6xl mx-auto px-4">
-        <motion.p {...fadeUp} className="text-script text-3xl text-sunshine text-center">
+    <section id="menu" className="relative overflow-hidden bg-forest py-24 text-cream md:py-32">
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0">
+        <div className="absolute left-1/2 top-0 size-[600px] -translate-x-1/2 rounded-full bg-sunshine/[0.05] blur-3xl" />
+      </div>
+
+      <div className="relative mx-auto max-w-6xl px-4">
+        <motion.p {...fadeUp} className="text-script text-center text-3xl text-sunshine">
           {t.menu.label}
         </motion.p>
         <motion.h2
           {...fadeUp}
-          className="text-display text-center text-[clamp(2.25rem,5vw,4rem)] mt-2"
+          className="text-display mt-2 text-center text-[clamp(2.25rem,5vw,4rem)]"
         >
           {t.menu.title}
         </motion.h2>
-        <motion.p {...fadeUp} className="text-center text-cream/70 mt-4 text-sm">
+        <motion.p {...fadeUp} className="mt-4 text-center text-sm text-cream/70">
           {t.menu.hint}
         </motion.p>
 
-        <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {/* Medaljoni kategorija - flex-wrap, sve vidljivo odmah, bez scrolla */}
+        <div className="mt-16 flex flex-wrap justify-center gap-x-5 gap-y-8 sm:gap-x-7 lg:gap-x-9">
           {menuCategoryKeys.map((key, i) => {
             const cat = t.menu.categories[key];
             const isActive = active === key;
@@ -911,65 +953,127 @@ function MenuSection() {
               <motion.button
                 key={key}
                 type="button"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.04 }}
+                transition={{ delay: i * 0.05 }}
                 onClick={() => setActive(key)}
-                className={`text-left rounded-3xl overflow-hidden border transition-all ${
-                  isActive
-                    ? "border-sunshine ring-2 ring-sunshine/40 scale-[1.02]"
-                    : "border-cream/10 hover:border-cream/30"
-                }`}
+                className="group flex w-16 shrink-0 flex-col items-center gap-3 sm:w-24"
               >
-                <div className="relative aspect-[4/3] overflow-hidden">
-                  {categoryVideos[key] ? (
-                    <video
-                      src={categoryVideos[key]}
-                      muted
-                      loop
-                      playsInline
-                      autoPlay
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <img
-                      src={categoryImages[key]}
-                      alt={cat.title}
-                      loading="lazy"
-                      className="w-full h-full object-cover"
-                    />
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-forest/90 via-forest/20 to-transparent" />
-                  <h3 className="absolute bottom-0 left-0 right-0 p-4 font-display text-lg">
-                    {cat.title}
-                  </h3>
-                </div>
+                <motion.div
+                  animate={{ scale: isActive ? 1.1 : 1, y: isActive ? -6 : 0 }}
+                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                  className={`relative size-16 overflow-hidden rounded-full border-2 shadow-lg transition-colors duration-300 sm:size-24 ${
+                    isActive
+                      ? "border-sunshine shadow-[0_10px_30px_rgba(255,220,80,0.25)]"
+                      : "border-cream/15 group-hover:border-cream/40"
+                  }`}
+                >
+                  <img
+                    src={categoryImages[key]}
+                    alt={cat.title}
+                    loading="lazy"
+                    className={`h-full w-full object-cover transition-all duration-300 ${
+                      isActive ? "opacity-100" : "opacity-60 group-hover:opacity-90"
+                    }`}
+                  />
+                </motion.div>
+
+                <span
+                  className={`whitespace-nowrap text-[11px] font-semibold tracking-wide transition-colors duration-300 sm:text-sm ${
+                    isActive ? "text-sunshine" : "text-cream/60 group-hover:text-cream/85"
+                  }`}
+                >
+                  {cat.title}
+                </span>
               </motion.button>
             );
           })}
         </div>
 
-        <motion.div
-          key={active}
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35 }}
-          className="mt-10 max-w-3xl mx-auto rounded-3xl bg-cream/10 border border-cream/15 p-8 text-center"
-        >
-          <h3 className="font-display text-2xl text-sunshine">{activeCategory.title}</h3>
-          <p className="mt-3 text-cream/85 leading-relaxed">{activeCategory.desc}</p>
-        </motion.div>
+        {/* Veliki preview - klikabilan za fullscreen */}
+        <AnimatePresence mode="wait">
+          <motion.button
+            key={active}
+            type="button"
+            onClick={() => setIsFullscreen(true)}
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="group relative mx-auto mt-14 block min-h-[360px] w-full max-w-4xl cursor-zoom-in overflow-hidden rounded-[2.5rem] border border-cream/10 text-left sm:min-h-[440px]"
+          >
+
+              <img
+                src={categoryImages[active]}
+                alt={activeCategory.title}
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+            <div className="absolute inset-0 bg-gradient-to-t from-forest via-forest/40 to-transparent" />
+
+            {/* Expand ikonica - signalizira da je klikabilno */}
+            <div className="absolute right-5 top-5 flex size-10 items-center justify-center rounded-full bg-forest/60 text-cream backdrop-blur-md transition-colors duration-300 group-hover:bg-sunshine group-hover:text-forest">
+              <Maximize2 className="size-4" />
+            </div>
+
+            <div className="absolute inset-x-0 bottom-0 p-7 text-center sm:p-10">
+              <h3 className="font-display text-2xl text-sunshine sm:text-3xl">
+                {activeCategory.title}
+              </h3>
+              <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-cream/85 sm:text-base">
+                {activeCategory.desc}
+              </p>
+            </div>
+          </motion.button>
+        </AnimatePresence>
       </div>
+
+      {/* Fullscreen lightbox */}
+      <AnimatePresence>
+        {isFullscreen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsFullscreen(false)}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 p-4 backdrop-blur-sm"
+          >
+            <button
+              type="button"
+              onClick={() => setIsFullscreen(false)}
+              className="absolute right-5 top-5 flex size-11 items-center justify-center rounded-full bg-white/10 text-cream transition-colors hover:bg-white/20"
+              aria-label="Zatvori"
+            >
+              <X className="size-5" />
+            </button>
+
+            <motion.div
+              initial={{ scale: 0.92, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.92, opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative max-h-[90vh] max-w-4xl overflow-hidden rounded-2xl"
+            >
+
+                <img
+                  src={categoryImages[active]}
+                  alt={activeCategory.title}
+                  className="max-h-[90vh] w-full object-contain"
+                />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
 
-
-
 function FeaturesTabs() {
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<"playground" | "wineWorkshop" | "fireplaceRoom" | "events">("playground");
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const f = t.features;
 
   const tabs = [
@@ -980,27 +1084,23 @@ function FeaturesTabs() {
   ];
 
   const activeData = f[activeTab];
-
   const tabImages = getTabImages(activeTab);
   const heroImage = tabImages[0];
-  const gridImages = tabImages.slice(1, 5);
+  const galleryImages = tabImages.slice(1);
 
   return (
-    <section id="features" className="bg-cream py-24 md:py-32 relative overflow-hidden">
-      {/* Subtle background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white/0 via-forest/3 to-white/0 pointer-events-none" />
-      
-      <div className="max-w-6xl mx-auto px-4 relative">
-        <motion.p {...fadeUp} className="text-script text-3xl text-orange-zest text-center">
+    <section id="features" className="bg-cream py-24 md:py-32">
+      <div className="mx-auto max-w-6xl px-4">
+        <motion.p {...fadeUp} className="text-script text-center text-3xl text-orange-zest">
           {f.label}
         </motion.p>
-        <motion.h2 {...fadeUp} className="text-display text-center text-[clamp(2.25rem,5vw,4rem)] mt-2 text-forest">
+        <motion.h2 {...fadeUp} className="text-display mt-2 text-center text-[clamp(2.25rem,5vw,4rem)] text-forest">
           {f.title}
         </motion.h2>
 
-        {/* Tab buttons */}
+        {/* Tab dugmad */}
         <div className="mt-10 flex flex-wrap justify-center gap-3">
-          {tabs.map(tab => {
+          {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
             return (
@@ -1008,10 +1108,10 @@ function FeaturesTabs() {
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-5 py-3 rounded-full font-semibold text-sm transition-all duration-300 border ${
+                className={`flex items-center gap-2 rounded-full border px-5 py-3 text-sm font-semibold transition-all duration-300 ${
                   isActive
-                    ? "bg-forest text-cream border-forest shadow-lg scale-105"
-                    : "bg-white text-forest/70 border-forest/15 hover:border-forest/40 hover:bg-forest/5"
+                    ? "scale-105 border-forest bg-forest text-cream shadow-lg"
+                    : "border-forest/15 bg-white text-forest/70 hover:border-forest/40 hover:bg-forest/5"
                 }`}
               >
                 <Icon className="size-4" />
@@ -1021,75 +1121,108 @@ function FeaturesTabs() {
           })}
         </div>
 
-        {/* Tab content */}
+        {/* Dvije kolone: video lijevo (sticky), galerija desno */}
         <motion.div
           key={activeTab}
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45 }}
-          className="mt-12 grid lg:grid-cols-2 gap-10 lg:gap-16 items-start"
+          className="mt-14 grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-12"
         >
-          {/* Left: Text content */}
-          <div className="space-y-5 lg:sticky lg:top-32">
-            {/* Hero image for this tab */}
-            {heroImage && (
-              <div className="aspect-[16/9] rounded-3xl overflow-hidden shadow-2xl">
-                <img
-                  src={heroImage}
-                  alt={activeData.title}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
+          {/* Lijevo: video + tekst */}
+          <div className="lg:sticky lg:top-32 lg:self-start">
+            {tabVideoMap[activeTab] ? (
+              <div className="mx-auto max-w-xs lg:mx-0">
+                <VideoPlayer src={tabVideoMap[activeTab]} poster={heroImage} portrait />
               </div>
+            ) : (
+              heroImage && (
+                <button
+                  type="button"
+                  onClick={() => setLightboxSrc(heroImage)}
+                  className="group relative block aspect-[4/5] w-full max-w-xs cursor-zoom-in overflow-hidden rounded-3xl shadow-xl lg:mx-0"
+                >
+                  <img
+                    src={heroImage}
+                    alt={activeData.title}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <span className="absolute right-4 top-4 grid size-9 place-items-center rounded-full bg-forest/60 text-cream backdrop-blur-md transition-colors duration-300 group-hover:bg-orange-zest group-hover:text-white">
+                    <Maximize2 className="size-4" />
+                  </span>
+                </button>
+              )
             )}
-            <h3 className="text-display text-2xl md:text-3xl text-forest mt-6">{activeData.title}</h3>
-            <p className="text-base md:text-lg text-forest/75 leading-relaxed">{activeData.desc}</p>
 
-            <VideoPlayer
-              src={tabVideoMap[activeTab]}
-              poster={heroImage}
-              portrait
-              // label={t.videos.items[activeTab === "playground" ? "family" : activeTab === "wineWorkshop" ? "wine" : activeTab === "fireplaceRoom" ? "summer" : "specialties"]}
-            />
+            <h3 className="text-display mt-7 text-2xl text-forest md:text-3xl">{activeData.title}</h3>
+            <p className="mt-3 max-w-md text-base leading-relaxed text-forest/75 md:text-lg">
+              {activeData.desc}
+            </p>
           </div>
 
-          {/* Right: Image gallery grid */}
-          <div className="grid grid-cols-2 gap-3">
-            {gridImages.length > 0 ? gridImages.map((src, idx) => (
-              <div
-                key={idx}
-                className={`overflow-hidden rounded-2xl shadow-md ${idx === 0 ? "col-span-2" : ""}`}
+          {/* Desno: uniformni grid slika */}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4">
+            {(tabVideoMap[activeTab] && heroImage ? [heroImage, ...galleryImages] : galleryImages).map((src, idx) => (
+              <motion.button
+                key={`${activeTab}-${src}-${idx}`}
+                type="button"
+                initial={{ opacity: 0, scale: 0.96 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: (idx % 9) * 0.04 }}
+                onClick={() => setLightboxSrc(src)}
+                className="group relative aspect-square cursor-zoom-in overflow-hidden rounded-2xl border border-forest/5 shadow-md transition-shadow duration-300 hover:shadow-xl"
               >
                 <img
                   src={src}
                   alt=""
                   loading="lazy"
-                  className={`w-full object-cover hover:scale-105 transition-transform duration-500 ${
-                    idx === 0 ? "h-56" : "h-40"
-                  }`}
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
-              </div>
-            )) : (
-              // Placeholder if no images yet
-              Array.from({ length: 4 }).map((_, idx) => (
-                <div
-                  key={idx}
-                  className={`overflow-hidden rounded-2xl bg-forest/8 border-2 border-dashed border-forest/20 flex items-center justify-center ${
-                    idx === 0 ? "col-span-2 h-56" : "h-40"
-                  }`}
-                >
-                  <p className="text-forest/30 text-sm font-medium">Galerija</p>
-                </div>
-              ))
-            )}
+                <span className="absolute inset-0 bg-forest/0 transition-colors duration-300 group-hover:bg-forest/40" />
+                <span className="absolute right-2.5 top-2.5 grid size-7 place-items-center rounded-full bg-forest/60 text-cream opacity-0 backdrop-blur-md transition-all duration-300 group-hover:opacity-100 group-hover:bg-orange-zest group-hover:text-white">
+                  <Maximize2 className="size-3.5" />
+                </span>
+              </motion.button>
+            ))}
           </div>
         </motion.div>
       </div>
+
+      <AnimatePresence>
+        {lightboxSrc && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setLightboxSrc(null)}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 p-4 backdrop-blur-sm"
+          >
+            <button
+              type="button"
+              onClick={() => setLightboxSrc(null)}
+              className="absolute right-5 top-5 grid size-11 place-items-center rounded-full bg-white/10 text-cream transition-colors hover:bg-white/20"
+              aria-label="Zatvori"
+            >
+              <X className="size-5" />
+            </button>
+            <motion.img
+              initial={{ scale: 0.92, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.92, opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              onClick={(e) => e.stopPropagation()}
+              src={lightboxSrc}
+              alt=""
+              className="max-h-[90vh] max-w-4xl rounded-2xl object-contain"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
-
-
 
 function VideoCoverflowCarousel() {
   const { t } = useLanguage();
@@ -1307,107 +1440,181 @@ function GalleryLightbox({
   }, [onClose, onPrev, onNext]);
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 p-4">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onClick={onClose}
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 p-4 backdrop-blur-sm"
+    >
       <button
         type="button"
         onClick={onClose}
-        className="absolute top-4 right-4 size-11 rounded-full bg-white/10 text-white grid place-items-center hover:bg-white/20 transition-colors"
+        className="absolute right-4 top-4 grid size-11 place-items-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
         aria-label={t.gallery.close}
       >
         <X className="size-5" />
       </button>
       <button
         type="button"
-        onClick={onPrev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 size-12 rounded-full bg-white/10 text-white grid place-items-center hover:bg-white/20 transition-colors"
+        onClick={(e) => {
+          e.stopPropagation();
+          onPrev();
+        }}
+        className="absolute left-3 top-1/2 grid size-12 -translate-y-1/2 place-items-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 sm:left-5"
         aria-label={t.gallery.prev}
       >
         <ChevronLeft className="size-6" />
       </button>
       <button
         type="button"
-        onClick={onNext}
-        className="absolute right-4 top-1/2 -translate-y-1/2 size-12 rounded-full bg-white/10 text-white grid place-items-center hover:bg-white/20 transition-colors"
+        onClick={(e) => {
+          e.stopPropagation();
+          onNext();
+        }}
+        className="absolute right-3 top-1/2 grid size-12 -translate-y-1/2 place-items-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 sm:right-5"
         aria-label={t.gallery.next}
       >
         <ChevronRight className="size-6" />
       </button>
-      <img
+
+      <motion.img
+        key={index}
+        initial={{ opacity: 0, scale: 0.96 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+        onClick={(e) => e.stopPropagation()}
         src={image.src}
         alt={image.alt}
-        className="max-h-[90vh] max-w-[95vw] object-contain rounded-lg shadow-2xl"
+        className="max-h-[90vh] max-w-[95vw] rounded-2xl object-contain shadow-2xl"
       />
-      <p className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/70 text-sm">
+
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="absolute bottom-6 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-sm text-white/80 backdrop-blur-md"
+      >
         {index + 1} / {galleryImages.length}
-      </p>
-    </div>
+      </div>
+    </motion.div>
   );
 }
 
 function GallerySection() {
   const { t } = useLanguage();
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [page, setPage] = useState(0);
+  const PER_PAGE = 12;
+  const totalPages = Math.ceil(galleryImages.length / PER_PAGE);
 
-  const openLightbox = (index: number) => setLightboxIndex(index);
+  const pageImages = galleryImages.slice(page * PER_PAGE, page * PER_PAGE + PER_PAGE);
+
+  const openLightbox = (localIdx: number) => setLightboxIndex(page * PER_PAGE + localIdx);
   const closeLightbox = () => setLightboxIndex(null);
   const prevLightbox = () =>
     setLightboxIndex((i) => (i === null ? null : (i - 1 + galleryImages.length) % galleryImages.length));
   const nextLightbox = () =>
     setLightboxIndex((i) => (i === null ? null : (i + 1) % galleryImages.length));
 
+  const goToPage = (p: number) => {
+    setPage(p);
+    document.getElementById("gallery")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   return (
-    <section id="gallery" className="bg-cream">
-      <div className="relative h-[55vh] min-h-[350px] max-h-[600px] overflow-hidden">
-      <img src={galleryImages[0]?.src} alt="" className="absolute top-0 w-full h-full object-cover md:object-[25%_25%]" />
-        <div className="absolute inset-0 bg-forest/55" />
-        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center text-cream px-4">
-          <motion.p {...fadeUp} className="text-script text-3xl text-sunshine">
-            {t.gallery.label}
-          </motion.p>
-          <motion.h2 {...fadeUp} className="text-display text-[clamp(2.25rem,5vw,4rem)] mt-2">
-            {t.gallery.title}
-          </motion.h2>
-          <motion.p {...fadeUp} className="max-w-xl mt-4 text-cream/85">
-            {t.gallery.subtitle}
-          </motion.p>
-        </div>
-      </div>
+    <section id="gallery" className="bg-cream py-24 md:py-32">
+      <div className="mx-auto max-w-6xl px-4">
+        <motion.p {...fadeUp} className="text-script text-center text-3xl text-orange-zest">
+          {t.gallery.label}
+        </motion.p>
+        <motion.h2 {...fadeUp} className="text-display mt-2 text-center text-[clamp(2.25rem,5vw,4rem)] text-forest">
+          {t.gallery.title}
+        </motion.h2>
+        <motion.p {...fadeUp} className="mx-auto mt-4 max-w-xl text-center text-forest/70">
+          {t.gallery.subtitle}
+        </motion.p>
 
-      <div className="max-w-6xl mx-auto px-4 py-16 md:py-24">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 auto-rows-[140px] sm:auto-rows-[150px] md:auto-rows-[160px] gap-3 md:gap-4 grid-flow-dense">
-          {galleryImages.map((img, i) => (
-            <motion.button
-              key={i}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={page}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.3 }}
+            className="mt-14 grid auto-rows-[140px] grid-flow-dense grid-cols-2 gap-3 sm:auto-rows-[150px] sm:grid-cols-3 md:auto-rows-[160px] md:grid-cols-4 md:gap-4"
+          >
+            {pageImages.map((img, i) => (
+              <button
+                key={`${page}-${i}`}
+                type="button"
+                onClick={() => openLightbox(i)}
+                className={`group relative cursor-zoom-in overflow-hidden rounded-2xl border border-forest/5 shadow-md transition-shadow duration-300 hover:shadow-xl ${bentoPattern[i % bentoPattern.length]}`}
+              >
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <span className="absolute inset-0 bg-forest/0 transition-colors duration-300 group-hover:bg-forest/40" />
+                <span className="absolute right-2.5 top-2.5 grid size-8 place-items-center rounded-full bg-forest/60 text-cream opacity-0 backdrop-blur-md transition-all duration-300 group-hover:opacity-100 group-hover:bg-orange-zest group-hover:text-white">
+                  <ZoomIn className="size-4" />
+                </span>
+              </button>
+            ))}
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Paginacija */}
+        {totalPages > 1 && (
+          <div className="mt-10 flex items-center justify-center gap-2">
+            <button
               type="button"
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: "-40px" }}
-              transition={{ duration: 0.5, delay: (i % 12) * 0.04 }}
-              onClick={() => openLightbox(i)}
-              className={`group relative overflow-hidden rounded-2xl shadow-md ${bentoPattern[i % bentoPattern.length]}`}
+              onClick={() => goToPage(Math.max(0, page - 1))}
+              disabled={page === 0}
+              className="grid size-10 place-items-center rounded-full border border-forest/15 text-forest/70 transition-colors hover:border-forest/40 hover:bg-forest/5 disabled:opacity-30 disabled:hover:border-forest/15 disabled:hover:bg-transparent"
+              aria-label="Prethodna stranica"
             >
-              <img
-                src={img.src}
-                alt={img.alt}
-                loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-              />
-              <span className="absolute inset-0 bg-forest/0 group-hover:bg-forest/40 transition-colors flex items-center justify-center">
-                <ZoomIn className="size-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-              </span>
-            </motion.button>
-          ))}
-        </div>
+              <ChevronLeft className="size-4" />
+            </button>
+
+            {Array.from({ length: totalPages }).map((_, p) => (
+              <button
+                key={p}
+                type="button"
+                onClick={() => goToPage(p)}
+                className={`grid size-10 place-items-center rounded-full text-sm font-semibold transition-all duration-300 ${
+                  p === page
+                    ? "bg-forest text-cream shadow-md"
+                    : "text-forest/60 hover:bg-forest/5"
+                }`}
+              >
+                {p + 1}
+              </button>
+            ))}
+
+            <button
+              type="button"
+              onClick={() => goToPage(Math.min(totalPages - 1, page + 1))}
+              disabled={page === totalPages - 1}
+              className="grid size-10 place-items-center rounded-full border border-forest/15 text-forest/70 transition-colors hover:border-forest/40 hover:bg-forest/5 disabled:opacity-30 disabled:hover:border-forest/15 disabled:hover:bg-transparent"
+              aria-label="Sljedeća stranica"
+            >
+              <ChevronRight className="size-4" />
+            </button>
+          </div>
+        )}
       </div>
 
-      {lightboxIndex !== null && (
-        <GalleryLightbox
-          index={lightboxIndex}
-          onClose={closeLightbox}
-          onPrev={prevLightbox}
-          onNext={nextLightbox}
-        />
-      )}
+      <AnimatePresence>
+        {lightboxIndex !== null && (
+          <GalleryLightbox
+            index={lightboxIndex}
+            onClose={closeLightbox}
+            onPrev={prevLightbox}
+            onNext={nextLightbox}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }
@@ -1576,11 +1783,19 @@ function Testimonials() {
 function ContactSection() {
   const { t } = useLanguage();
 
+  const socialLinks = [
+    { icon: Instagram, href: INSTAGRAM, label: "Instagram" },
+    { icon: Facebook, href: FACEBOOK, label: "Facebook" },
+    { icon: MapPin, href: GOOGLE_MAPS, label: "Google Maps" },
+    { icon: Stars, href: TRIPADVISOR, label: "TripAdvisor" },
+  ];
+
   return (
     <section id="contact" className="bg-cream py-16 md:py-24">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="relative grid lg:grid-cols-2 rounded-[2rem] overflow-hidden bg-forest text-cream shadow-2xl">
-          <div className="relative h-80 lg:h-auto min-h-[320px]">
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="relative grid overflow-hidden rounded-[2rem] bg-forest text-cream shadow-2xl lg:grid-cols-2">
+          {/* Slika */}
+          <div className="relative h-80 min-h-[320px] lg:h-auto">
             <img
               src={contactImg}
               alt="Restoran Garden"
@@ -1588,57 +1803,47 @@ function ContactSection() {
               className="absolute inset-0 size-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-forest/50 via-transparent to-forest/30" />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -left-20 -top-20 size-64 rounded-full bg-sunshine/10 blur-3xl lg:block"
+            />
           </div>
+
+          {/* Sadržaj */}
           <div className="p-8 md:p-12">
             <p className="text-script text-2xl text-sunshine">{t.contact.label}</p>
-            <h2 className="text-display text-[clamp(2.25rem,5vw,3.5rem)] mt-1">{t.contact.title}</h2>
-            <p className="mt-3 text-cream/80 text-sm max-w-md">{t.contact.subtitle}</p>
+            <h2 className="text-display mt-1 text-[clamp(2.25rem,5vw,3.5rem)]">{t.contact.title}</h2>
+            <p className="mt-3 max-w-md text-sm text-cream/80">{t.contact.subtitle}</p>
 
+            {/* Kontakt info */}
             <div className="mt-8 space-y-5">
               <div className="flex items-start gap-3">
-                <Phone className="size-5 text-sunshine mt-0.5 shrink-0" />
+                <Phone className="mt-0.5 size-5 shrink-0 text-sunshine" />
                 <div>
                   <p className="font-semibold">{t.contact.phone}</p>
-                  <a href={`tel:${PHONE}`} className="text-cream/85 hover:text-sunshine transition-colors">
+                  <a href={`tel:${PHONE}`} className="text-cream/85 transition-colors hover:text-sunshine">
                     {PHONE_DISPLAY}
                   </a>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <MapPin className="size-5 text-sunshine mt-0.5 shrink-0" />
+                <MapPin className="mt-0.5 size-5 shrink-0 text-sunshine" />
                 <div>
                   <p className="font-semibold">{t.contact.address}</p>
                   <p className="text-cream/85">{ADDRESS}</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <Mail className="size-5 text-sunshine mt-0.5 shrink-0" />
+                <Mail className="mt-0.5 size-5 shrink-0 text-sunshine" />
                 <div>
                   <p className="font-semibold">{t.contact.email}</p>
-                  <a
-                    href={`mailto:${EMAIL}`}
-                    className="text-cream/85 hover:text-sunshine transition-colors"
-                  >
+                  <a href={`mailto:${EMAIL}`} className="text-cream/85 transition-colors hover:text-sunshine">
                     {EMAIL}
                   </a>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <Instagram className="size-5 text-sunshine mt-0.5 shrink-0" />
-                <div>
-                  <p className="font-semibold">{t.contact.instagram}</p>
-                  <a
-                    href={INSTAGRAM}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-cream/85 hover:text-sunshine transition-colors"
-                  >
-                    @restaurantgarden2018
-                  </a>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <Clock className="size-5 text-sunshine mt-0.5 shrink-0" />
+                <Clock className="mt-0.5 size-5 shrink-0 text-sunshine" />
                 <div>
                   <p className="font-semibold">{t.contact.hoursTitle}</p>
                   <p className="text-cream/85">{t.contact.hoursWeek}</p>
@@ -1647,13 +1852,42 @@ function ContactSection() {
               </div>
             </div>
 
-            <a
-              href={`tel:${PHONE}`}
-              className="mt-8 inline-flex items-center gap-2 rounded-full bg-sunshine text-ink px-6 py-3.5 font-semibold hover:bg-leaf transition-colors"
-            >
-              <Phone className="size-4" />
-              {t.contact.callUs}
-            </a>
+            {/* Social linkovi - kružna dugmad */}
+            <div className="mt-8 flex items-center flex-wrap gap-3 border-t border-cream/10 pt-7">
+              {socialLinks.map(({ icon: Icon, href, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="group h-11 px-3 gap-2 flex items-center rounded-full border border-cream/15 bg-white/[0.04] text-cream/80 transition-all duration-300 hover:-translate-y-0.5 hover:border-sunshine hover:bg-sunshine hover:text-forest"
+                >
+                  <Icon className="size-[18px]" />
+                  <p>{label}</p>
+                </a>
+              ))}
+            </div>
+
+            {/* CTA dugmad */}
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <a
+                href={`tel:${PHONE}`}
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-sunshine px-6 py-3.5 font-semibold text-ink transition-colors hover:bg-leaf"
+              >
+                <Phone className="size-4" />
+                {t.contact.callUs}
+              </a>
+              <a
+                href={GOOGLE_MAPS}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-cream/20 px-6 py-3.5 font-semibold text-cream transition-colors hover:border-cream/40 hover:bg-white/5"
+              >
+                <MapPin className="size-4" />
+                {t.contact.getDirections}
+              </a>
+            </div>
           </div>
         </div>
       </div>
